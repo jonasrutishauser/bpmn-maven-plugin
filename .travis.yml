@@ -7,9 +7,7 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: script
-  script:
-  - cp .travis.settings.xml $HOME/.m2/settings.xml
-  - mvn -e -B compile site-deploy
+  script: cp .travis.settings.xml $HOME/.m2/settings.xml && mvn -e -B compile site-deploy
   skip_cleanup: true
   on:
     branch: master
