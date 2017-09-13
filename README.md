@@ -11,3 +11,4 @@ Generates a [maven](https://maven.apache.org) report which shows the projects BP
 ## Releasing
 
 * Execute `mvn -B release:clean release:prepare release:perform`
+* Deploy site `(cd target/checkout; mvn -P release site-deploy)`
