@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+  <cmmn:caseFileItemDefinition id="CaseFileItemDefinition_16lksgv" name="Info" />
+  <cmmn:case id="Case_1" name="Test Case">
+    <cmmn:caseFileModel id="CaseFileModel_0784rga">
+      <cmmn:caseFileItem id="CaseFileItem_1mtpgg2" definitionRef="CaseFileItemDefinition_16lksgv" />
+    </cmmn:caseFileModel>
+    <cmmn:casePlanModel id="CasePlanModel_1" name="Test CasePlanModel" autoComplete="false">
+      <cmmn:planItem id="PlanItem_1" definitionRef="ProcessTask_05n7wey">
+        <cmmn:entryCriterion id="EntryCriterion_05dwvmg" sentryRef="Sentry_0dj9b5b" />
+      </cmmn:planItem>
+      <cmmn:planItem id="PlanItem_1j9lor0" definitionRef="DecisionTask_1sqa4v1">
+        <cmmn:entryCriterion id="EntryCriterion_0vm3c1q" sentryRef="Sentry_05gsiyc" />
+      </cmmn:planItem>
+      <cmmn:sentry id="Sentry_05gsiyc">
+        <cmmn:caseFileItemOnPart id="CaseFileItemOnPart_00p2h5m" sourceRef="CaseFileItem_1mtpgg2">        <cmmn:standardEvent>update</cmmn:standardEvent>
+</cmmn:caseFileItemOnPart>
+      </cmmn:sentry>
+      <cmmn:sentry id="Sentry_0dj9b5b">
+        <cmmn:caseFileItemOnPart id="CaseFileItemOnPart_0r8wi4a" sourceRef="CaseFileItem_1mtpgg2">        <cmmn:standardEvent>update</cmmn:standardEvent>
+</cmmn:caseFileItemOnPart>
+      </cmmn:sentry>
+      <cmmn:processTask id="ProcessTask_05n7wey" name="Test Task" />
+      <cmmn:decisionTask id="DecisionTask_1sqa4v1" name="Task 2" />
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="CMMNDiagram_1" name="Test Case">
+      <cmmndi:Size xsi:type="dc:Dimension" width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="CasePlanModel_1">
+        <dc:Bounds x="114" y="63" width="534" height="389" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_0qctin8_di" cmmnElementRef="PlanItem_1">
+        <dc:Bounds x="150" y="96" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1s0mq3p_di" cmmnElementRef="PlanItem_1j9lor0">
+        <dc:Bounds x="150" y="227" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CaseFileItem_1mtpgg2_di" cmmnElementRef="CaseFileItem_1mtpgg2">
+        <dc:Bounds x="546" y="359" width="36" height="50" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="554" y="409" width="19" height="13" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="EntryCriterion_0vm3c1q_di" cmmnElementRef="EntryCriterion_0vm3c1q">
+        <dc:Bounds x="240" y="253" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="CaseFileItemOnPart_00p2h5m_di" cmmnElementRef="CaseFileItemOnPart_00p2h5m" targetCMMNElementRef="EntryCriterion_0vm3c1q" isStandardEventVisible="true">
+        <di:waypoint xsi:type="dc:Point" x="564" y="359" />
+        <di:waypoint xsi:type="dc:Point" x="564" y="267" />
+        <di:waypoint xsi:type="dc:Point" x="260" y="267" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="275" y="270.5" width="40" height="13" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNShape id="EntryCriterion_05dwvmg_di" cmmnElementRef="EntryCriterion_05dwvmg">
+        <dc:Bounds x="240" y="120" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="CaseFileItemOnPart_0r8wi4a_di" cmmnElementRef="CaseFileItemOnPart_0r8wi4a" targetCMMNElementRef="EntryCriterion_05dwvmg" isStandardEventVisible="true">
+        <di:waypoint xsi:type="dc:Point" x="564" y="359" />
+        <di:waypoint xsi:type="dc:Point" x="564" y="134" />
+        <di:waypoint xsi:type="dc:Point" x="260" y="134" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="273" y="140" width="40" height="13" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>
