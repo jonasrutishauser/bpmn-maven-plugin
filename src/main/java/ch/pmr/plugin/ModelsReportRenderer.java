@@ -60,7 +60,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 	public String getTargetFile(File model) {
 		return "models/" + getPath(model).replaceAll("[\\/]", "-") + "-" + model.getName();
 	}
-	
+
 	public Set<String> getScripts() {
 		return scripts;
 	}
@@ -155,7 +155,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 		sink.unknown("script", new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_END) }, null);
 	}
 
-	private String getProcessName(File bpmn) {
+	protected String getProcessName(File bpmn) {
 		try {
 			return getModelName(bpmn, "http://www.omg.org/spec/BPMN/20100524/MODEL", "process");
 		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {
@@ -164,7 +164,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 		}
 	}
 
-	private String getDecisionName(File dmn) {
+	protected String getDecisionName(File dmn) {
 		try {
 			return getModelName(dmn, "http://www.omg.org/spec/DMN/20151101/dmn.xsd", "decision");
 		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {
@@ -173,7 +173,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 		}
 	}
 
-	private String getCaseName(File cmmn) {
+	protected String getCaseName(File cmmn) {
 		try {
 			return getModelName(cmmn, "http://www.omg.org/spec/CMMN/20151109/MODEL", "case");
 		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {
@@ -187,8 +187,8 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 		try (InputStream in = new FileInputStream(model)) {
 			XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(in);
 			while (reader.hasNext()) {
-				if (reader.next() == XMLEvent.START_ELEMENT && localName.equals(reader.getLocalName())
-						&& namespace.equals(reader.getNamespaceURI())) {
+				if (reader.next() == XMLEvent.START_ELEMENT && namespace.equals(reader.getNamespaceURI())
+						&& localName.equals(reader.getLocalName())) {
 					for (int i = 0; i < reader.getAttributeCount(); i++) {
 						if ("name".equals(reader.getAttributeLocalName(i))) {
 							return reader.getAttributeValue(i);
