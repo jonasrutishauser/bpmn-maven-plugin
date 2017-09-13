@@ -60,9 +60,9 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 	public String getTargetFile(File model) {
 <span class="fc" id="L61">		return &quot;models/&quot; + getPath(model).replaceAll(&quot;[\\/]&quot;, &quot;-&quot;) + &quot;-&quot; + model.getName();</span>
 	}
-	
+
 	public Set&lt;String&gt; getScripts() {
-<span class="nc" id="L65">		return scripts;</span>
+<span class="fc" id="L65">		return scripts;</span>
 	}
 
 	@Override
@@ -155,30 +155,30 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 <span class="fc" id="L155">		sink.unknown(&quot;script&quot;, new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_END) }, null);</span>
 <span class="fc" id="L156">	}</span>
 
-	private String getProcessName(File bpmn) {
+	protected String getProcessName(File bpmn) {
 		try {
 <span class="fc" id="L160">			return getModelName(bpmn, &quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot;, &quot;process&quot;);</span>
-<span class="nc" id="L161">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
-<span class="nc" id="L162">			logger.warn(&quot;failed to get bpmn process name&quot;, e);</span>
-<span class="nc" id="L163">			return null;</span>
+<span class="fc" id="L161">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L162">			logger.warn(&quot;failed to get bpmn process name&quot;, e);</span>
+<span class="fc" id="L163">			return null;</span>
 		}
 	}
 
-	private String getDecisionName(File dmn) {
+	protected String getDecisionName(File dmn) {
 		try {
 <span class="fc" id="L169">			return getModelName(dmn, &quot;http://www.omg.org/spec/DMN/20151101/dmn.xsd&quot;, &quot;decision&quot;);</span>
-<span class="nc" id="L170">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
-<span class="nc" id="L171">			logger.warn(&quot;failed to get dmn decision name&quot;, e);</span>
-<span class="nc" id="L172">			return null;</span>
+<span class="fc" id="L170">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L171">			logger.warn(&quot;failed to get dmn decision name&quot;, e);</span>
+<span class="fc" id="L172">			return null;</span>
 		}
 	}
 
-	private String getCaseName(File cmmn) {
+	protected String getCaseName(File cmmn) {
 		try {
 <span class="fc" id="L178">			return getModelName(cmmn, &quot;http://www.omg.org/spec/CMMN/20151109/MODEL&quot;, &quot;case&quot;);</span>
-<span class="nc" id="L179">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
-<span class="nc" id="L180">			logger.warn(&quot;failed to get cmmn case name&quot;, e);</span>
-<span class="nc" id="L181">			return null;</span>
+<span class="fc" id="L179">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L180">			logger.warn(&quot;failed to get cmmn case name&quot;, e);</span>
+<span class="fc" id="L181">			return null;</span>
 		}
 	}
 
@@ -186,9 +186,9 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 			throws XMLStreamException, FactoryConfigurationError, IOException {
 <span class="pc" id="L187">		try (InputStream in = new FileInputStream(model)) {</span>
 <span class="fc" id="L188">			XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(in);</span>
-<span class="pc bpc" id="L189" title="1 of 2 branches missed.">			while (reader.hasNext()) {</span>
-<span class="fc bfc" id="L190" title="All 4 branches covered.">				if (reader.next() == XMLEvent.START_ELEMENT &amp;&amp; localName.equals(reader.getLocalName())</span>
-<span class="pc bpc" id="L191" title="1 of 2 branches missed.">						&amp;&amp; namespace.equals(reader.getNamespaceURI())) {</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">			while (reader.hasNext()) {</span>
+<span class="fc bfc" id="L190" title="All 4 branches covered.">				if (reader.next() == XMLEvent.START_ELEMENT &amp;&amp; namespace.equals(reader.getNamespaceURI())</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">						&amp;&amp; localName.equals(reader.getLocalName())) {</span>
 <span class="pc bpc" id="L192" title="1 of 2 branches missed.">					for (int i = 0; i &lt; reader.getAttributeCount(); i++) {</span>
 <span class="fc bfc" id="L193" title="All 2 branches covered.">						if (&quot;name&quot;.equals(reader.getAttributeLocalName(i))) {</span>
 <span class="fc" id="L194">							return reader.getAttributeValue(i);</span>
@@ -196,8 +196,8 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 					}
 				}
 			}
-<span class="pc bpc" id="L199" title="10 of 12 branches missed.">		}</span>
-<span class="nc" id="L200">		return null;</span>
+<span class="pc bpc" id="L199" title="8 of 12 branches missed.">		}</span>
+<span class="fc" id="L200">		return null;</span>
 	}
 
 	private void renderTableHeader() {

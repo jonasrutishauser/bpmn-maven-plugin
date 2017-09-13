@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  	<strong class="jxr_keyword">public</strong> String getTargetFile(File model) {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  		<strong class="jxr_keyword">return</strong> <span class="jxr_string">"models/"</span> + getPath(model).replaceAll(<span class="jxr_string">"[&#92;&#92;/]"</span>, <span class="jxr_string">"-"</span>) + <span class="jxr_string">"-"</span> + model.getName();
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  	}
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  	
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  	<strong class="jxr_keyword">public</strong> Set&lt;String&gt; getScripts() {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  		<strong class="jxr_keyword">return</strong> scripts;
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  	}
@@ -163,7 +163,7 @@
 <a class="jxr_linenumber" name="L155" href="#L155">155</a> 		sink.unknown(<span class="jxr_string">"script"</span>, <strong class="jxr_keyword">new</strong> Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_END) }, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L156" href="#L156">156</a> 	}
 <a class="jxr_linenumber" name="L157" href="#L157">157</a> 
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> 	<strong class="jxr_keyword">private</strong> String getProcessName(File bpmn) {
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> 	<strong class="jxr_keyword">protected</strong> String getProcessName(File bpmn) {
 <a class="jxr_linenumber" name="L159" href="#L159">159</a> 		<strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L160" href="#L160">160</a> 			<strong class="jxr_keyword">return</strong> getModelName(bpmn, <span class="jxr_string">"http://www.omg.org/spec/BPMN/20100524/MODEL"</span>, <span class="jxr_string">"process"</span>);
 <a class="jxr_linenumber" name="L161" href="#L161">161</a> 		} <strong class="jxr_keyword">catch</strong> (XMLStreamException | FactoryConfigurationError | IOException e) {
@@ -172,7 +172,7 @@
 <a class="jxr_linenumber" name="L164" href="#L164">164</a> 		}
 <a class="jxr_linenumber" name="L165" href="#L165">165</a> 	}
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> 
-<a class="jxr_linenumber" name="L167" href="#L167">167</a> 	<strong class="jxr_keyword">private</strong> String getDecisionName(File dmn) {
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 	<strong class="jxr_keyword">protected</strong> String getDecisionName(File dmn) {
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 		<strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L169" href="#L169">169</a> 			<strong class="jxr_keyword">return</strong> getModelName(dmn, <span class="jxr_string">"http://www.omg.org/spec/DMN/20151101/dmn.xsd"</span>, <span class="jxr_string">"decision"</span>);
 <a class="jxr_linenumber" name="L170" href="#L170">170</a> 		} <strong class="jxr_keyword">catch</strong> (XMLStreamException | FactoryConfigurationError | IOException e) {
@@ -181,7 +181,7 @@
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> 		}
 <a class="jxr_linenumber" name="L174" href="#L174">174</a> 	}
 <a class="jxr_linenumber" name="L175" href="#L175">175</a> 
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> 	<strong class="jxr_keyword">private</strong> String getCaseName(File cmmn) {
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 	<strong class="jxr_keyword">protected</strong> String getCaseName(File cmmn) {
 <a class="jxr_linenumber" name="L177" href="#L177">177</a> 		<strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L178" href="#L178">178</a> 			<strong class="jxr_keyword">return</strong> getModelName(cmmn, <span class="jxr_string">"http://www.omg.org/spec/CMMN/20151109/MODEL"</span>, <span class="jxr_string">"case"</span>);
 <a class="jxr_linenumber" name="L179" href="#L179">179</a> 		} <strong class="jxr_keyword">catch</strong> (XMLStreamException | FactoryConfigurationError | IOException e) {
@@ -195,8 +195,8 @@
 <a class="jxr_linenumber" name="L187" href="#L187">187</a> 		<strong class="jxr_keyword">try</strong> (InputStream in = <strong class="jxr_keyword">new</strong> FileInputStream(model)) {
 <a class="jxr_linenumber" name="L188" href="#L188">188</a> 			XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(in);
 <a class="jxr_linenumber" name="L189" href="#L189">189</a> 			<strong class="jxr_keyword">while</strong> (reader.hasNext()) {
-<a class="jxr_linenumber" name="L190" href="#L190">190</a> 				<strong class="jxr_keyword">if</strong> (reader.next() == XMLEvent.START_ELEMENT &amp;&amp; localName.equals(reader.getLocalName())
-<a class="jxr_linenumber" name="L191" href="#L191">191</a> 						&amp;&amp; namespace.equals(reader.getNamespaceURI())) {
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> 				<strong class="jxr_keyword">if</strong> (reader.next() == XMLEvent.START_ELEMENT &amp;&amp; namespace.equals(reader.getNamespaceURI())
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> 						&amp;&amp; localName.equals(reader.getLocalName())) {
 <a class="jxr_linenumber" name="L192" href="#L192">192</a> 					<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; reader.getAttributeCount(); i++) {
 <a class="jxr_linenumber" name="L193" href="#L193">193</a> 						<strong class="jxr_keyword">if</strong> (<span class="jxr_string">"name"</span>.equals(reader.getAttributeLocalName(i))) {
 <a class="jxr_linenumber" name="L194" href="#L194">194</a> 							<strong class="jxr_keyword">return</strong> reader.getAttributeValue(i);
