@@ -17,9 +17,10 @@
 			<item name="Introduction" href="index.html"/>
             <item name="Goals" ref="plugin-info"/>
             <item name="Usage" href="usage.html"/>
+            <item name="Release Notes" ref="github-report"/>
 		</menu>
-		<menu name="Sample">
-			<item name="Sample Report" ref="business-process-models"/>
+		<menu name="Examples">
+			<item name="Example Report" ref="business-process-models"/>
 		</menu>
 		<menu ref="reports" />
 	</body>

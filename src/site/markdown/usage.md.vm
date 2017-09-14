@@ -1,0 +1,33 @@
+#[[##]]# Usage
+
+#[[###]]# Generate the Report as Part of Project Reports
+
+To generate the Business Process Model report as part of the site generation, add the following in the `<reporting>` section of your POM:
+
+```xml
+<project>
+   [...]
+   <reporting>
+      <plugins>
+         <plugin>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>${project.artifactId}</artifactId>
+            <version>${project.version}</version>
+         </plugin>
+      </plugins>
+   </reporting>
+   [...]
+</project>
+```
+
+When `mvn site` is invoked, the report will automatically be included in the Project Reports menu.
+
+#[[###]]# Generate the Report in a Standalone Fashion
+
+The plugin can also generate the report using its standalone goal:
+
+```bash
+mvn ${project.groupId}:${project.artifactId}:report
+```
+
+A HTML report should be generated in `${basedir}/target/site/business-process-models.html`.
