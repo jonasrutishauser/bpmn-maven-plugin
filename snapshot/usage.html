@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="Date-Revision-yyyymmdd" content="20170914" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>BPMN Maven Plugin &#x2013; Project Summary</title>
+    <title>BPMN Maven Plugin &#x2013; Usage</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.6.min.css" />
     <link rel="stylesheet" href="./css/site.css" />
     <link rel="stylesheet" href="./css/print.css" media="print" />
@@ -33,7 +33,7 @@
       <div id="breadcrumbs">
         <ul class="breadcrumb">
         <li class=""><a href="./" title="BPMN Maven Plugin">BPMN Maven Plugin</a><span class="divider">/</span></li>
-    <li class="active ">Project Summary</li>
+    <li class="active ">Usage</li>
         <li id="publishDate" class="pull-right"><span class="divider">|</span> Last Published: 2017-09-14</li>
           <li id="projectVersion" class="pull-right"><span class="divider">|</span>Version: 1.0.0-SNAPSHOT</li>
       <li class="pull-right"><a href="http://maven.apache.org/" class="externalLink" title="Maven">Maven</a></li>
@@ -46,28 +46,13 @@
           <li class="nav-header">Overview</li>
     <li><a href="index.html" title="Introduction"><span class="none"></span>Introduction</a>  </li>
     <li><a href="plugin-info.html" title="Goals"><span class="none"></span>Goals</a>  </li>
-    <li><a href="usage.html" title="Usage"><span class="none"></span>Usage</a>  </li>
+    <li class="active"><a href="#"><span class="none"></span>Usage</a>
+  </li>
     <li><a href="github-report.html" title="Release Notes"><span class="none"></span>Release Notes</a>  </li>
           <li class="nav-header">Examples</li>
     <li><a href="business-process-models.html" title="Example Report"><span class="none"></span>Example Report</a>  </li>
               <li class="nav-header">Project Documentation</li>
-    <li><a href="project-info.html" title="Project Information"><span class="icon-chevron-down"></span>Project Information</a>
-      <ul class="nav nav-list">
-    <li><a href="integration.html" title="CI Management"><span class="none"></span>CI Management</a>  </li>
-    <li><a href="dependencies.html" title="Dependencies"><span class="none"></span>Dependencies</a>  </li>
-    <li><a href="dependency-info.html" title="Dependency Information"><span class="none"></span>Dependency Information</a>  </li>
-    <li><a href="distribution-management.html" title="Distribution Management"><span class="none"></span>Distribution Management</a>  </li>
-    <li><a href="index.html" title="About"><span class="none"></span>About</a>  </li>
-    <li><a href="issue-tracking.html" title="Issue Management"><span class="none"></span>Issue Management</a>  </li>
-    <li><a href="license.html" title="Licenses"><span class="none"></span>Licenses</a>  </li>
-    <li><a href="plugin-management.html" title="Plugin Management"><span class="none"></span>Plugin Management</a>  </li>
-    <li><a href="plugins.html" title="Plugins"><span class="none"></span>Plugins</a>  </li>
-    <li><a href="team-list.html" title="Team"><span class="none"></span>Team</a>  </li>
-    <li><a href="source-repository.html" title="Source Code Management"><span class="none"></span>Source Code Management</a>  </li>
-    <li class="active"><a href="#"><span class="none"></span>Summary</a>
-  </li>
-      </ul>
-  </li>
+    <li><a href="project-info.html" title="Project Information"><span class="icon-chevron-right"></span>Project Information</a>  </li>
     <li><a href="project-reports.html" title="Project Reports"><span class="icon-chevron-right"></span>Project Reports</a>  </li>
   </ul>
           <hr />
@@ -82,46 +67,35 @@
         </div>
         <div id="bodyColumn"  class="span10" >
 <div class="section">
-<h2><a name="Project_Summary"></a>Project Summary</h2><a name="Project_Summary"></a>
+<h2><a name="Usage"></a>Usage</h2>
 <div class="section">
-<h3><a name="Project_Information"></a>Project Information</h3><a name="Project_Information"></a>
-<table border="0" class="table table-striped">
-<tr class="a">
-<th>Field</th>
-<th>Value</th></tr>
-<tr class="b">
-<td>Name</td>
-<td>BPMN Maven Plugin</td></tr>
-<tr class="a">
-<td>Description</td>
-<td>Maven report which shows the projects BPMN, DMN and CMMN models</td></tr>
-<tr class="b">
-<td>Homepage</td>
-<td><a class="externalLink" href="https://jonasrutishauser.github.io/bpmn-maven-plugin/snapshot">https://jonasrutishauser.github.io/bpmn-maven-plugin/snapshot</a></td></tr></table></div>
+<h3><a name="Generate_the_Report_as_Part_of_Project_Reports"></a>Generate the Report as Part of Project Reports</h3>
+<p>To generate the Business Process Model report as part of the site generation, add the following in the <tt>&lt;reporting&gt;</tt> section of your POM:</p>
+
+<div class="source">
+<div class="source"><pre class="prettyprint linenums">&lt;project&gt;
+   [...]
+   &lt;reporting&gt;
+      &lt;plugins&gt;
+         &lt;plugin&gt;
+            &lt;groupId&gt;com.github.jonasrutishauser.plugin&lt;/groupId&gt;
+            &lt;artifactId&gt;bpmn-maven-plugin&lt;/artifactId&gt;
+            &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+         &lt;/plugin&gt;
+      &lt;/plugins&gt;
+   &lt;/reporting&gt;
+   [...]
+&lt;/project&gt;
+</pre></div></div>
+<p>When <tt>mvn site</tt> is invoked, the report will automatically be included in the Project Reports menu.</p></div>
 <div class="section">
-<h3><a name="Project_Organization"></a>Project Organization</h3><a name="Project_Organization"></a>
-<p>This project does not belong to an organization.</p></div>
-<div class="section">
-<h3><a name="Build_Information"></a>Build Information</h3><a name="Build_Information"></a>
-<table border="0" class="table table-striped">
-<tr class="a">
-<th>Field</th>
-<th>Value</th></tr>
-<tr class="b">
-<td>GroupId</td>
-<td>com.github.jonasrutishauser.plugin</td></tr>
-<tr class="a">
-<td>ArtifactId</td>
-<td>bpmn-maven-plugin</td></tr>
-<tr class="b">
-<td>Version</td>
-<td>1.0.0-SNAPSHOT</td></tr>
-<tr class="a">
-<td>Type</td>
-<td>maven-plugin</td></tr>
-<tr class="b">
-<td>Java Version</td>
-<td>1.8</td></tr></table></div></div>
+<h3><a name="Generate_the_Report_in_a_Standalone_Fashion"></a>Generate the Report in a Standalone Fashion</h3>
+<p>The plugin can also generate the report using its standalone goal:</p>
+
+<div class="source">
+<div class="source"><pre class="prettyprint linenums">mvn com.github.jonasrutishauser.plugin:bpmn-maven-plugin:report
+</pre></div></div>
+<p>A HTML report should be generated in <tt>${basedir}/target/site/business-process-models.html</tt>.</p></div></div>
         </div>
       </div>
     </div>
