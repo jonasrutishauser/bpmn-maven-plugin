@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.github.jonasrutishauser</groupId>
 		<artifactId>parent</artifactId>
-		<version>2</version>
+		<version>3</version>
 	</parent>
 
 	<groupId>com.github.jonasrutishauser.plugin</groupId>
@@ -115,7 +115,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<dependencies>
 					<dependency>
-						<groupId>org.junit.platform</groupId>
+						<groupId>com.github.jonasrutishauser.org.junit.platform</groupId>
 						<artifactId>junit-platform-surefire-provider</artifactId>
 						<version>1.0.0</version>
 					</dependency>
