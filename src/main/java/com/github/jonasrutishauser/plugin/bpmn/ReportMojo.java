@@ -1,4 +1,4 @@
-package ch.pmr.plugin;
+package com.github.jonasrutishauser.plugin.bpmn;
 
 import java.io.File;
 import java.io.IOException;

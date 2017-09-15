@@ -1,4 +1,4 @@
-package ch.pmr.plugin;
+package com.github.jonasrutishauser.plugin.bpmn;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -30,6 +30,10 @@ import org.apache.maven.reporting.MavenReportException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.github.jonasrutishauser.plugin.bpmn.ModelsReportRenderer;
+import com.github.jonasrutishauser.plugin.bpmn.ReportConfiguration;
+import com.github.jonasrutishauser.plugin.bpmn.ReportMojo;
 
 import ch.pmr.plugin.junit.extension.TemporaryFolderExtension;
 import ch.pmr.plugin.junit.extension.TemporaryFolderExtension.Root;

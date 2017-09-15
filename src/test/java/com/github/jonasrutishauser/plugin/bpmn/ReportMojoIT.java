@@ -1,4 +1,4 @@
-package ch.pmr.plugin;
+package com.github.jonasrutishauser.plugin.bpmn;
 
 import static org.junit.Assert.assertTrue;
 

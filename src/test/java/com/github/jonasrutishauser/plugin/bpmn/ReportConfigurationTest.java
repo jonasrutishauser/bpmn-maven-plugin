@@ -1,4 +1,4 @@
-package ch.pmr.plugin;
+package com.github.jonasrutishauser.plugin.bpmn;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.github.jonasrutishauser.plugin.bpmn.ReportConfiguration;
 
 @DisplayName("ReportConfiguration")
 public class ReportConfigurationTest {

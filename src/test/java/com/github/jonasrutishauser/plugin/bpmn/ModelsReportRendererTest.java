@@ -1,4 +1,4 @@
-package ch.pmr.plugin;
+package com.github.jonasrutishauser.plugin.bpmn;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,6 +15,9 @@ import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
 import org.apache.maven.shared.utils.io.IOUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.github.jonasrutishauser.plugin.bpmn.ModelsReportRenderer;
+import com.github.jonasrutishauser.plugin.bpmn.ReportConfiguration;
 
 @DisplayName("ModelsReportRenderer")
 public class ModelsReportRendererTest {
