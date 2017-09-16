@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReportMojo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BPMN Maven Plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.jonasrutishauser.maven.plugin.bpmn</a> &gt; <span class="el_source">ReportMojo.java</span></div><h1>ReportMojo.java</h1><pre class="source lang-java linenums">package com.github.jonasrutishauser.maven.plugin.bpmn;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.reporting.AbstractMavenReport;
+import org.apache.maven.reporting.MavenReportException;
+
+/**
+ * Generates a Maven Report which shows the projects BPMN, DMN and CMMN models.
+ * 
+ * @author jonas
+ */
+@Mojo(name = &quot;report&quot;)
+public class ReportMojo extends AbstractMavenReport {
+
+	@Parameter(defaultValue = &quot;${project.basedir}/src&quot;, readonly = true)
+	private File srcFolder;
+
+	private ReportConfiguration configuration;
+
+	public ReportMojo() {
+<span class="fc" id="L37">		this(new File(&quot;src&quot;));</span>
+<span class="fc" id="L38">	}</span>
+
+<span class="fc" id="L40">	protected ReportMojo(File srcFolder) {</span>
+<span class="fc" id="L41">		this.srcFolder = srcFolder;</span>
+<span class="fc" id="L42">	}</span>
+
+<span class="fc" id="L44">	protected ReportMojo(ReportConfiguration configuration) {</span>
+<span class="fc" id="L45">		this.configuration = configuration;</span>
+<span class="fc" id="L46">	}</span>
+
+	public String getName(Locale locale) {
+<span class="nc" id="L49">		return &quot;Business Process Models&quot;;</span>
+	}
+
+	public String getDescription(Locale locale) {
+<span class="nc" id="L53">		return &quot;Shows the projects BPMN, DMN and CMMN models.&quot;;</span>
+	}
+
+	public String getOutputName() {
+<span class="nc" id="L57">		return &quot;business-process-models&quot;;</span>
+	}
+
+	@Override
+	public boolean canGenerateReport() {
+		try {
+<span class="fc" id="L63">			return getConfiguration().canGenerateReport();</span>
+<span class="fc" id="L64">		} catch (MavenReportException e) {</span>
+<span class="fc" id="L65">			getLog().warn(&quot;could not determine if bpmn report should be generated&quot;, e);</span>
+<span class="fc" id="L66">			return false;</span>
+		}
+	}
+
+	private ReportConfiguration getConfiguration() throws MavenReportException {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">		if (configuration == null) {</span>
+<span class="nc" id="L72">			configuration = new ReportConfiguration(getProject().getBasedir(), getModels(&quot;bpmn&quot;), getModels(&quot;dmn&quot;),</span>
+<span class="nc" id="L73">					getModels(&quot;cmmn&quot;));</span>
+		}
+<span class="fc" id="L75">		return configuration;</span>
+	}
+
+	@Override
+	protected void executeReport(Locale locale) throws MavenReportException {
+<span class="fc" id="L80">		final ModelsReportRenderer renderer = createRenderer();</span>
+<span class="fc" id="L81">		renderer.render();</span>
+<span class="fc" id="L82">		copyModels(renderer);</span>
+<span class="fc" id="L83">		copyScripts(renderer);</span>
+<span class="fc" id="L84">	}</span>
+
+	protected ModelsReportRenderer createRenderer() throws MavenReportException {
+<span class="nc" id="L87">		return new ModelsReportRenderer(getSink(), getConfiguration());</span>
+	}
+
+	private void copyScripts(ModelsReportRenderer renderer) throws MavenReportException {
+<span class="fc bfc" id="L91" title="All 2 branches covered.">		for (String script : renderer.getScripts()) {</span>
+<span class="fc" id="L92">			URL source = getClass().getResource(script.substring(script.lastIndexOf('/') + 1));</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">			if (source == null) {</span>
+<span class="fc" id="L94">				source = getSourceFromDependency(script);</span>
+			}
+<span class="pc" id="L96">			try (InputStream resource = source.openStream()) {</span>
+<span class="fc" id="L97">				Path target = Paths.get(getOutputDirectory(), script);</span>
+<span class="fc" id="L98">				Files.createDirectories(target.getParent());</span>
+<span class="fc" id="L99">				Files.copy(resource, target, StandardCopyOption.REPLACE_EXISTING);</span>
+<span class="pc bpc" id="L100" title="6 of 8 branches missed.">			} catch (IOException e) {</span>
+<span class="nc" id="L101">				throw new MavenReportException(&quot;failed to copy script '&quot; + script + &quot;' to target&quot;, e);</span>
+<span class="fc" id="L102">			}</span>
+<span class="fc" id="L103">		}</span>
+<span class="fc" id="L104">	}</span>
+
+	private URL getSourceFromDependency(String script) throws MavenReportException {
+<span class="fc" id="L107">		String artifactId = script.substring(0, script.indexOf('/'));</span>
+<span class="fc" id="L108">		Properties pomProperties = new Properties();</span>
+<span class="pc" id="L109">		try (InputStream properties = getClass()</span>
+<span class="fc" id="L110">				.getResourceAsStream(&quot;/META-INF/maven/org.webjars.bower/&quot; + artifactId + &quot;/pom.properties&quot;)) {</span>
+<span class="fc" id="L111">			pomProperties.load(properties);</span>
+<span class="pc bpc" id="L112" title="6 of 8 branches missed.">		} catch (IOException e) {</span>
+<span class="nc" id="L113">			throw new MavenReportException(&quot;failed to determine version of bower script &quot; + artifactId, e);</span>
+<span class="fc" id="L114">		}</span>
+<span class="fc" id="L115">		return getClass().getResource(&quot;/META-INF/resources/webjars/&quot; + artifactId + &quot;/&quot;</span>
+<span class="fc" id="L116">				+ pomProperties.getProperty(&quot;version&quot;) + &quot;/dist/&quot; + script.substring(script.indexOf('/') + 1));</span>
+	}
+
+	private void copyModels(final ModelsReportRenderer renderer) throws MavenReportException {
+<span class="fc bfc" id="L120" title="All 2 branches covered.">		for (File model : getConfiguration().getModels().toArray(File[]::new)) {</span>
+			try {
+<span class="fc" id="L122">				Path target = Paths.get(getOutputDirectory(), renderer.getTargetFile(model));</span>
+<span class="fc" id="L123">				Files.createDirectories(target.getParent());</span>
+<span class="fc" id="L124">				Files.copy(model.toPath(), target, StandardCopyOption.REPLACE_EXISTING);</span>
+<span class="nc" id="L125">			} catch (IOException e) {</span>
+<span class="nc" id="L126">				throw new MavenReportException(&quot;failed to copy model '&quot; + model + &quot;' to target&quot;, e);</span>
+<span class="fc" id="L127">			}</span>
+		}
+<span class="fc" id="L129">	}</span>
+
+	protected List&lt;File&gt; getModels(String type) throws MavenReportException {
+<span class="fc bfc" id="L132" title="All 2 branches covered.">		if (!srcFolder.exists()) {</span>
+<span class="fc" id="L133">			return Collections.emptyList();</span>
+		}
+<span class="pc" id="L135">		try (Stream&lt;Path&gt; stream = Files.find(srcFolder.toPath(), Integer.MAX_VALUE,</span>
+<span class="fc bfc" id="L136" title="All 4 branches covered.">				(file, attributes) -&gt; Files.isRegularFile(file) &amp;&amp; file.toString().endsWith(&quot;.&quot; + type))) {</span>
+<span class="fc" id="L137">			return stream.map(Path::toFile).collect(Collectors.toList());</span>
+<span class="pc bpc" id="L138" title="6 of 8 branches missed.">		} catch (IOException e) {</span>
+<span class="nc" id="L139">			throw new MavenReportException(&quot;could not find &quot; + type + &quot; files&quot;, e);</span>
+		}
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

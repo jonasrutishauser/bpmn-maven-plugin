@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModelsReportRenderer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BPMN Maven Plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.jonasrutishauser.maven.plugin.bpmn</a> &gt; <span class="el_source">ModelsReportRenderer.java</span></div><h1>ModelsReportRenderer.java</h1><pre class="source lang-java linenums">package com.github.jonasrutishauser.maven.plugin.bpmn;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.events.XMLEvent;
+
+import org.apache.maven.doxia.markup.HtmlMarkup;
+import org.apache.maven.doxia.sink.Sink;
+import org.apache.maven.doxia.sink.SinkEventAttributes;
+import org.apache.maven.doxia.sink.impl.SinkEventAttributeSet;
+import org.apache.maven.reporting.AbstractMavenReportRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ModelsReportRenderer extends AbstractMavenReportRenderer {
+
+<span class="fc" id="L27">	private final Logger logger = LoggerFactory.getLogger(getClass());</span>
+
+	private final ReportConfiguration configuration;
+<span class="fc" id="L30">	private final Set&lt;String&gt; scripts = new HashSet&lt;&gt;();</span>
+
+	public ModelsReportRenderer(Sink sink, ReportConfiguration configuration) {
+<span class="fc" id="L33">		super(sink);</span>
+<span class="fc" id="L34">		this.configuration = configuration;</span>
+<span class="fc" id="L35">	}</span>
+
+	public void render() {
+<span class="fc" id="L38">		sink.head();</span>
+<span class="fc" id="L39">		sink.title();</span>
+<span class="fc" id="L40">		text(getTitle());</span>
+<span class="fc" id="L41">		sink.title_();</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">		if (configuration.hasDmn()) {</span>
+<span class="fc" id="L43">			stylesheet(&quot;dmn-js/css/dmn-js.css&quot;);</span>
+		}
+<span class="fc" id="L45">		sink.head_();</span>
+
+<span class="fc" id="L47">		sink.body();</span>
+<span class="fc" id="L48">		renderBody();</span>
+<span class="fc" id="L49">		sink.body_();</span>
+
+<span class="fc" id="L51">		sink.flush();</span>
+<span class="fc" id="L52">		sink.close();</span>
+<span class="fc" id="L53">	}</span>
+
+	@Override
+	public String getTitle() {
+<span class="fc" id="L57">		return &quot;Business Process Models&quot;;</span>
+	}
+
+	public String getTargetFile(File model) {
+<span class="fc" id="L61">		return &quot;models/&quot; + getPath(model).replaceAll(&quot;[\\/]&quot;, &quot;-&quot;) + &quot;-&quot; + model.getName();</span>
+	}
+
+	public Set&lt;String&gt; getScripts() {
+<span class="fc" id="L65">		return scripts;</span>
+	}
+
+	@Override
+	protected void renderBody() {
+<span class="fc" id="L70">		startSection(&quot;Business Process Models&quot;);</span>
+<span class="fc" id="L71">		renderModelTable();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">		if (configuration.hasBpmn()) {</span>
+<span class="fc" id="L73">			startSection(&quot;BPMN&quot;);</span>
+<span class="fc" id="L74">			renderModels(configuration.getBpmns(), &quot;bpmn&quot;);</span>
+<span class="fc" id="L75">			endSection();</span>
+		}
+<span class="fc bfc" id="L77" title="All 2 branches covered.">		if (configuration.hasDmn()) {</span>
+<span class="fc" id="L78">			startSection(&quot;DMN&quot;);</span>
+<span class="fc" id="L79">			renderModels(configuration.getDmns(), &quot;dmn&quot;);</span>
+<span class="fc" id="L80">			endSection();</span>
+		}
+<span class="fc bfc" id="L82" title="All 2 branches covered.">		if (configuration.hasCmmn()) {</span>
+<span class="fc" id="L83">			startSection(&quot;CMMN&quot;);</span>
+<span class="fc" id="L84">			renderModels(configuration.getCmmns(), &quot;cmmn&quot;);</span>
+<span class="fc" id="L85">			endSection();</span>
+		}
+<span class="fc" id="L87">		endSection();</span>
+<span class="fc" id="L88">	}</span>
+
+	private void renderModelTable() {
+<span class="fc" id="L91">		startTable(new int[] { Sink.JUSTIFY_LEFT, Sink.JUSTIFY_LEFT, Sink.JUSTIFY_LEFT, Sink.JUSTIFY_LEFT }, false);</span>
+<span class="fc" id="L92">		renderTableHeader();</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">		for (File bpmn : configuration.getBpmns()) {</span>
+<span class="fc" id="L94">			renderTableRow(bpmn, getProcessName(bpmn), &quot;BPMN&quot;);</span>
+<span class="fc" id="L95">		}</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">		for (File dmn : configuration.getDmns()) {</span>
+<span class="fc" id="L97">			renderTableRow(dmn, getDecisionName(dmn), &quot;DMN&quot;);</span>
+<span class="fc" id="L98">		}</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">		for (File cmmn : configuration.getCmmns()) {</span>
+<span class="fc" id="L100">			renderTableRow(cmmn, getCaseName(cmmn), &quot;CMMN&quot;);</span>
+<span class="fc" id="L101">		}</span>
+<span class="fc" id="L102">		endTable();</span>
+<span class="fc" id="L103">	}</span>
+
+	private void renderTableRow(File model, String name, String type) {
+<span class="fc" id="L106">		tableRow(new String[] { createLinkPatternedText(model.getName(), &quot;#&quot; + model.getName()), getPath(model), name,</span>
+<span class="fc" id="L107">				createLinkPatternedText(type, &quot;#&quot; + type) });</span>
+<span class="fc" id="L108">	}</span>
+
+	private String getPath(File bpmn) {
+<span class="fc" id="L111">		return bpmn.getParent().replace(configuration.getBasedir().getAbsolutePath() + &quot;/&quot;, &quot;&quot;);</span>
+	}
+
+	private void renderModels(List&lt;File&gt; models, String type) {
+<span class="fc" id="L115">		sourceJavaScript(type + &quot;-js/&quot; + type + &quot;-viewer.min.js&quot;);</span>
+<span class="fc" id="L116">		sourceJavaScript(type + &quot;-js/&quot; + type + &quot;.js&quot;);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">		for (File model : models) {</span>
+<span class="fc" id="L118">			startSection(model.getName());</span>
+<span class="fc" id="L119">			container(getTargetFile(model).replace(&quot;models/&quot;, &quot;&quot;));</span>
+<span class="fc" id="L120">			javaScript(&quot;show&quot; + Character.toUpperCase(type.charAt(0)) + type.substring(1) + &quot;(document.getElementById('&quot;</span>
+<span class="fc" id="L121">					+ getTargetFile(model).replace(&quot;models/&quot;, &quot;&quot;) + &quot;'), '&quot; + getTargetFile(model) + &quot;');&quot;);</span>
+<span class="fc" id="L122">			endSection();</span>
+<span class="fc" id="L123">		}</span>
+<span class="fc" id="L124">	}</span>
+
+	private void container(String id) {
+<span class="fc" id="L127">		SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L128">		atts.addAttribute(SinkEventAttributes.ID, id);</span>
+<span class="fc" id="L129">		sink.unknown(&quot;div&quot;, new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_START) }, atts);</span>
+<span class="fc" id="L130">		sink.unknown(&quot;div&quot;, new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_END) }, null);</span>
+<span class="fc" id="L131">	}</span>
+
+	protected void javaScript(String script) {
+<span class="fc" id="L134">		SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L135">		atts.addAttribute(SinkEventAttributes.TYPE, &quot;text/javascript&quot;);</span>
+<span class="fc" id="L136">		sink.unknown(&quot;script&quot;, new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_START) }, atts);</span>
+<span class="fc" id="L137">		sink.text(script);</span>
+<span class="fc" id="L138">		sink.unknown(&quot;script&quot;, new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_END) }, null);</span>
+<span class="fc" id="L139">	}</span>
+
+	private void stylesheet(String href) {
+<span class="fc" id="L142">		scripts.add(href);</span>
+<span class="fc" id="L143">		SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L144">		atts.addAttribute(SinkEventAttributes.REL, &quot;stylesheet&quot;);</span>
+<span class="fc" id="L145">		atts.addAttribute(SinkEventAttributes.HREF, href);</span>
+<span class="fc" id="L146">		sink.unknown(&quot;link&quot;, new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_SIMPLE) }, atts);</span>
+<span class="fc" id="L147">	}</span>
+
+	private void sourceJavaScript(String src) {
+<span class="fc" id="L150">		scripts.add(src);</span>
+<span class="fc" id="L151">		SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L152">		atts.addAttribute(SinkEventAttributes.SRC, src);</span>
+<span class="fc" id="L153">		atts.addAttribute(SinkEventAttributes.TYPE, &quot;text/javascript&quot;);</span>
+<span class="fc" id="L154">		sink.unknown(&quot;script&quot;, new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_START) }, atts);</span>
+<span class="fc" id="L155">		sink.unknown(&quot;script&quot;, new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_END) }, null);</span>
+<span class="fc" id="L156">	}</span>
+
+	protected String getProcessName(File bpmn) {
+		try {
+<span class="fc" id="L160">			return getModelName(bpmn, &quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot;, &quot;process&quot;);</span>
+<span class="fc" id="L161">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L162">			logger.warn(&quot;failed to get bpmn process name&quot;, e);</span>
+<span class="fc" id="L163">			return null;</span>
+		}
+	}
+
+	protected String getDecisionName(File dmn) {
+		try {
+<span class="fc" id="L169">			return getModelName(dmn, &quot;http://www.omg.org/spec/DMN/20151101/dmn.xsd&quot;, &quot;decision&quot;);</span>
+<span class="fc" id="L170">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L171">			logger.warn(&quot;failed to get dmn decision name&quot;, e);</span>
+<span class="fc" id="L172">			return null;</span>
+		}
+	}
+
+	protected String getCaseName(File cmmn) {
+		try {
+<span class="fc" id="L178">			return getModelName(cmmn, &quot;http://www.omg.org/spec/CMMN/20151109/MODEL&quot;, &quot;case&quot;);</span>
+<span class="fc" id="L179">		} catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L180">			logger.warn(&quot;failed to get cmmn case name&quot;, e);</span>
+<span class="fc" id="L181">			return null;</span>
+		}
+	}
+
+	private String getModelName(File model, String namespace, String localName)
+			throws XMLStreamException, FactoryConfigurationError, IOException {
+<span class="pc" id="L187">		try (InputStream in = new FileInputStream(model)) {</span>
+<span class="fc" id="L188">			XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(in);</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">			while (reader.hasNext()) {</span>
+<span class="fc bfc" id="L190" title="All 4 branches covered.">				if (reader.next() == XMLEvent.START_ELEMENT &amp;&amp; namespace.equals(reader.getNamespaceURI())</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">						&amp;&amp; localName.equals(reader.getLocalName())) {</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">					for (int i = 0; i &lt; reader.getAttributeCount(); i++) {</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">						if (&quot;name&quot;.equals(reader.getAttributeLocalName(i))) {</span>
+<span class="fc" id="L194">							return reader.getAttributeValue(i);</span>
+						}
+					}
+				}
+			}
+<span class="pc bpc" id="L199" title="8 of 12 branches missed.">		}</span>
+<span class="fc" id="L200">		return null;</span>
+	}
+
+	private void renderTableHeader() {
+<span class="fc" id="L204">		sink.tableRow();</span>
+<span class="fc" id="L205">		sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
+<span class="fc" id="L206">		sink.text(&quot;Filename&quot;);</span>
+<span class="fc" id="L207">		sink.tableHeaderCell_();</span>
+<span class="fc" id="L208">		sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
+<span class="fc" id="L209">		sink.text(&quot;Path&quot;);</span>
+<span class="fc" id="L210">		sink.tableHeaderCell_();</span>
+<span class="fc" id="L211">		sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
+<span class="fc" id="L212">		sink.text(&quot;Model name&quot;);</span>
+<span class="fc" id="L213">		sink.tableHeaderCell_();</span>
+<span class="fc" id="L214">		sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
+<span class="fc" id="L215">		sink.text(&quot;Model type&quot;);</span>
+<span class="fc" id="L216">		sink.tableHeaderCell_();</span>
+<span class="fc" id="L217">		sink.tableRow_();</span>
+<span class="fc" id="L218">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
