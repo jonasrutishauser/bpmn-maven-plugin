@@ -1,4 +1,4 @@
-package ch.pmr.plugin.junit.extension;
+package com.github.jonasrutishauser.maven.plugin.bpmn.junit.extension;
 
 import java.io.IOException;
 import java.lang.annotation.Documented;

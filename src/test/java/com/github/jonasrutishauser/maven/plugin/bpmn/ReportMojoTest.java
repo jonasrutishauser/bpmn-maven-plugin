@@ -1,4 +1,4 @@
-package com.github.jonasrutishauser.plugin.bpmn;
+package com.github.jonasrutishauser.maven.plugin.bpmn;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -31,12 +31,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.github.jonasrutishauser.plugin.bpmn.ModelsReportRenderer;
-import com.github.jonasrutishauser.plugin.bpmn.ReportConfiguration;
-import com.github.jonasrutishauser.plugin.bpmn.ReportMojo;
-
-import ch.pmr.plugin.junit.extension.TemporaryFolderExtension;
-import ch.pmr.plugin.junit.extension.TemporaryFolderExtension.Root;
+import com.github.jonasrutishauser.maven.plugin.bpmn.ModelsReportRenderer;
+import com.github.jonasrutishauser.maven.plugin.bpmn.ReportConfiguration;
+import com.github.jonasrutishauser.maven.plugin.bpmn.ReportMojo;
+import com.github.jonasrutishauser.maven.plugin.bpmn.junit.extension.TemporaryFolderExtension;
+import com.github.jonasrutishauser.maven.plugin.bpmn.junit.extension.TemporaryFolderExtension.Root;
 
 @DisplayName("ReportMojo")
 @ExtendWith(TemporaryFolderExtension.class)

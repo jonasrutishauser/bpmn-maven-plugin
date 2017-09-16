@@ -1,4 +1,4 @@
-package com.github.jonasrutishauser.plugin.bpmn;
+package com.github.jonasrutishauser.maven.plugin.bpmn;
 
 import java.io.File;
 import java.io.IOException;
