@@ -9,7 +9,7 @@ after_success:
 - bash <(curl -s https://codecov.io/bash) -c -F integration
 deploy:
   provider: script
-  script: cp .travis.settings.xml $HOME/.m2/settings.xml && mvn -e compile site-deploy
+  script: git config user.email "jonas.rutishauser@alumni.ethz.ch" && git config user.name "Jonas Rutishauser" && cp .travis.settings.xml $HOME/.m2/settings.xml && mvn -e compile site-deploy
   skip_cleanup: true
   on:
     branch: master
