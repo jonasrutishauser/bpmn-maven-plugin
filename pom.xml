@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.github.jonasrutishauser</groupId>
 		<artifactId>parent</artifactId>
-		<version>3</version>
+		<version>6</version>
 	</parent>
 
 	<groupId>com.github.jonasrutishauser.maven.plugin</groupId>
@@ -16,6 +16,11 @@
 	<url>${url}</url>
 	<name>BPMN Maven Plugin</name>
 	<description>Maven report which shows the projects BPMN, DMN and CMMN models</description>
+
+	<properties>
+		<junit-jupiter.version>5.0.0</junit-jupiter.version>
+		<junit-platform.version>1.0.0</junit-platform.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -66,7 +71,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.0.0</version>
+			<version>${junit-jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -98,13 +103,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.0.0</version>
+			<version>${junit-jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-launcher</artifactId>
-			<version>1.0.0</version>
+			<version>${junit-platform.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -117,7 +122,7 @@
 					<dependency>
 						<groupId>com.github.jonasrutishauser.org.junit.platform</groupId>
 						<artifactId>junit-platform-surefire-provider</artifactId>
-						<version>1.0.0</version>
+						<version>${junit-platform.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
