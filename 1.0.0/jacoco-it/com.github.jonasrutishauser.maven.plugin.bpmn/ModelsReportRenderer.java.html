@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModelsReportRenderer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BPMN Maven Plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.jonasrutishauser.maven.plugin.bpmn</a> &gt; <span class="el_source">ModelsReportRenderer.java</span></div><h1>ModelsReportRenderer.java</h1><pre class="source lang-java linenums">package com.github.jonasrutishauser.maven.plugin.bpmn;
+
+/*
+ * Copyright (C) 2017 Jonas Rutishauser
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation version 3 of the License.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.
+ * If not, see &lt;http://www.gnu.org/licenses/lgpl-3.0.txt&gt;.
+ */
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.events.XMLEvent;
+
+import org.apache.maven.doxia.markup.HtmlMarkup;
+import org.apache.maven.doxia.sink.Sink;
+import org.apache.maven.doxia.sink.SinkEventAttributes;
+import org.apache.maven.doxia.sink.impl.SinkEventAttributeSet;
+import org.apache.maven.reporting.AbstractMavenReportRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ModelsReportRenderer
+    extends AbstractMavenReportRenderer
+{
+
+<span class="fc" id="L46">    private final Logger logger = LoggerFactory.getLogger( getClass() );</span>
+
+    private final ReportConfiguration configuration;
+
+<span class="fc" id="L50">    private final Set&lt;String&gt; scripts = new HashSet&lt;&gt;();</span>
+
+    public ModelsReportRenderer( Sink sink, ReportConfiguration configuration )
+    {
+<span class="fc" id="L54">        super( sink );</span>
+<span class="fc" id="L55">        this.configuration = configuration;</span>
+<span class="fc" id="L56">    }</span>
+
+    public void render()
+    {
+<span class="fc" id="L60">        sink.head();</span>
+<span class="fc" id="L61">        sink.title();</span>
+<span class="fc" id="L62">        text( getTitle() );</span>
+<span class="fc" id="L63">        sink.title_();</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if ( configuration.hasDmn() )</span>
+        {
+<span class="fc" id="L66">            stylesheet( &quot;dmn-js/css/dmn-js.css&quot; );</span>
+        }
+<span class="fc" id="L68">        sink.head_();</span>
+
+<span class="fc" id="L70">        sink.body();</span>
+<span class="fc" id="L71">        renderBody();</span>
+<span class="fc" id="L72">        sink.body_();</span>
+
+<span class="fc" id="L74">        sink.flush();</span>
+<span class="fc" id="L75">        sink.close();</span>
+<span class="fc" id="L76">    }</span>
+
+    @Override
+    public String getTitle()
+    {
+<span class="fc" id="L81">        return &quot;Business Process Models&quot;;</span>
+    }
+
+    public String getTargetFile( File model )
+    {
+<span class="fc" id="L86">        return &quot;models/&quot; + getPath( model ).replaceAll( &quot;[\\/]&quot;, &quot;-&quot; ) + &quot;-&quot; + model.getName();</span>
+    }
+
+    public Set&lt;String&gt; getScripts()
+    {
+<span class="fc" id="L91">        return scripts;</span>
+    }
+
+    @Override
+    protected void renderBody()
+    {
+<span class="fc" id="L97">        startSection( &quot;Business Process Models&quot; );</span>
+<span class="fc" id="L98">        renderModelTable();</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if ( configuration.hasBpmn() )</span>
+        {
+<span class="fc" id="L101">            startSection( &quot;BPMN&quot; );</span>
+<span class="fc" id="L102">            renderModels( configuration.getBpmns(), &quot;bpmn&quot; );</span>
+<span class="fc" id="L103">            endSection();</span>
+        }
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if ( configuration.hasDmn() )</span>
+        {
+<span class="fc" id="L107">            startSection( &quot;DMN&quot; );</span>
+<span class="fc" id="L108">            renderModels( configuration.getDmns(), &quot;dmn&quot; );</span>
+<span class="fc" id="L109">            endSection();</span>
+        }
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if ( configuration.hasCmmn() )</span>
+        {
+<span class="fc" id="L113">            startSection( &quot;CMMN&quot; );</span>
+<span class="fc" id="L114">            renderModels( configuration.getCmmns(), &quot;cmmn&quot; );</span>
+<span class="fc" id="L115">            endSection();</span>
+        }
+<span class="fc" id="L117">        endSection();</span>
+<span class="fc" id="L118">    }</span>
+
+    private void renderModelTable()
+    {
+<span class="fc" id="L122">        startTable( new int[] { Sink.JUSTIFY_LEFT, Sink.JUSTIFY_LEFT, Sink.JUSTIFY_LEFT, Sink.JUSTIFY_LEFT }, false );</span>
+<span class="fc" id="L123">        renderTableHeader();</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        for ( File bpmn : configuration.getBpmns() )</span>
+        {
+<span class="fc" id="L126">            renderTableRow( bpmn, getProcessName( bpmn ), &quot;BPMN&quot; );</span>
+<span class="fc" id="L127">        }</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        for ( File dmn : configuration.getDmns() )</span>
+        {
+<span class="fc" id="L130">            renderTableRow( dmn, getDecisionName( dmn ), &quot;DMN&quot; );</span>
+<span class="fc" id="L131">        }</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        for ( File cmmn : configuration.getCmmns() )</span>
+        {
+<span class="fc" id="L134">            renderTableRow( cmmn, getCaseName( cmmn ), &quot;CMMN&quot; );</span>
+<span class="fc" id="L135">        }</span>
+<span class="fc" id="L136">        endTable();</span>
+<span class="fc" id="L137">    }</span>
+
+    private void renderTableRow( File model, String name, String type )
+    {
+<span class="fc" id="L141">        tableRow( new String[] { createLinkPatternedText( model.getName(), &quot;#&quot; + model.getName() ), getPath( model ),</span>
+<span class="fc" id="L142">            name, createLinkPatternedText( type, &quot;#&quot; + type ) } );</span>
+<span class="fc" id="L143">    }</span>
+
+    private String getPath( File bpmn )
+    {
+<span class="fc" id="L147">        return bpmn.getParent().replace( configuration.getBasedir().getAbsolutePath() + &quot;/&quot;, &quot;&quot; );</span>
+    }
+
+    private void renderModels( List&lt;File&gt; models, String type )
+    {
+<span class="fc" id="L152">        sourceJavaScript( type + &quot;-js/&quot; + type + &quot;-viewer.min.js&quot; );</span>
+<span class="fc" id="L153">        sourceJavaScript( type + &quot;-js/&quot; + type + &quot;.js&quot; );</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        for ( File model : models )</span>
+        {
+<span class="fc" id="L156">            startSection( model.getName() );</span>
+<span class="fc" id="L157">            container( getTargetFile( model ).replace( &quot;models/&quot;, &quot;&quot; ) );</span>
+<span class="fc" id="L158">            javaScript( &quot;show&quot; + Character.toUpperCase( type.charAt( 0 ) ) + type.substring( 1 )</span>
+<span class="fc" id="L159">                + &quot;(document.getElementById('&quot; + getTargetFile( model ).replace( &quot;models/&quot;, &quot;&quot; ) + &quot;'), '&quot;</span>
+<span class="fc" id="L160">                + getTargetFile( model ) + &quot;');&quot; );</span>
+<span class="fc" id="L161">            endSection();</span>
+<span class="fc" id="L162">        }</span>
+<span class="fc" id="L163">    }</span>
+
+    private void container( String id )
+    {
+<span class="fc" id="L167">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L168">        atts.addAttribute( SinkEventAttributes.ID, id );</span>
+<span class="fc" id="L169">        sink.unknown( &quot;div&quot;, new Object[] { Integer.valueOf( HtmlMarkup.TAG_TYPE_START ) }, atts );</span>
+<span class="fc" id="L170">        sink.unknown( &quot;div&quot;, new Object[] { Integer.valueOf( HtmlMarkup.TAG_TYPE_END ) }, null );</span>
+<span class="fc" id="L171">    }</span>
+
+    protected void javaScript( String script )
+    {
+<span class="fc" id="L175">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L176">        atts.addAttribute( SinkEventAttributes.TYPE, &quot;text/javascript&quot; );</span>
+<span class="fc" id="L177">        sink.unknown( &quot;script&quot;, new Object[] { Integer.valueOf( HtmlMarkup.TAG_TYPE_START ) }, atts );</span>
+<span class="fc" id="L178">        sink.text( script );</span>
+<span class="fc" id="L179">        sink.unknown( &quot;script&quot;, new Object[] { Integer.valueOf( HtmlMarkup.TAG_TYPE_END ) }, null );</span>
+<span class="fc" id="L180">    }</span>
+
+    private void stylesheet( String href )
+    {
+<span class="fc" id="L184">        scripts.add( href );</span>
+<span class="fc" id="L185">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L186">        atts.addAttribute( SinkEventAttributes.REL, &quot;stylesheet&quot; );</span>
+<span class="fc" id="L187">        atts.addAttribute( SinkEventAttributes.HREF, href );</span>
+<span class="fc" id="L188">        sink.unknown( &quot;link&quot;, new Object[] { Integer.valueOf( HtmlMarkup.TAG_TYPE_SIMPLE ) }, atts );</span>
+<span class="fc" id="L189">    }</span>
+
+    private void sourceJavaScript( String src )
+    {
+<span class="fc" id="L193">        scripts.add( src );</span>
+<span class="fc" id="L194">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L195">        atts.addAttribute( SinkEventAttributes.SRC, src );</span>
+<span class="fc" id="L196">        atts.addAttribute( SinkEventAttributes.TYPE, &quot;text/javascript&quot; );</span>
+<span class="fc" id="L197">        sink.unknown( &quot;script&quot;, new Object[] { Integer.valueOf( HtmlMarkup.TAG_TYPE_START ) }, atts );</span>
+<span class="fc" id="L198">        sink.unknown( &quot;script&quot;, new Object[] { Integer.valueOf( HtmlMarkup.TAG_TYPE_END ) }, null );</span>
+<span class="fc" id="L199">    }</span>
+
+    protected String getProcessName( File bpmn )
+    {
+        try
+        {
+<span class="fc" id="L205">            return getModelName( bpmn, &quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot;, &quot;process&quot; );</span>
+        }
+<span class="nc" id="L207">        catch ( XMLStreamException | FactoryConfigurationError | IOException e )</span>
+        {
+<span class="nc" id="L209">            logger.warn( &quot;failed to get bpmn process name&quot;, e );</span>
+<span class="nc" id="L210">            return null;</span>
+        }
+    }
+
+    protected String getDecisionName( File dmn )
+    {
+        try
+        {
+<span class="fc" id="L218">            return getModelName( dmn, &quot;http://www.omg.org/spec/DMN/20151101/dmn.xsd&quot;, &quot;decision&quot; );</span>
+        }
+<span class="nc" id="L220">        catch ( XMLStreamException | FactoryConfigurationError | IOException e )</span>
+        {
+<span class="nc" id="L222">            logger.warn( &quot;failed to get dmn decision name&quot;, e );</span>
+<span class="nc" id="L223">            return null;</span>
+        }
+    }
+
+    protected String getCaseName( File cmmn )
+    {
+        try
+        {
+<span class="fc" id="L231">            return getModelName( cmmn, &quot;http://www.omg.org/spec/CMMN/20151109/MODEL&quot;, &quot;case&quot; );</span>
+        }
+<span class="nc" id="L233">        catch ( XMLStreamException | FactoryConfigurationError | IOException e )</span>
+        {
+<span class="nc" id="L235">            logger.warn( &quot;failed to get cmmn case name&quot;, e );</span>
+<span class="nc" id="L236">            return null;</span>
+        }
+    }
+
+    private String getModelName( File model, String namespace, String localName )
+        throws XMLStreamException, FactoryConfigurationError, IOException
+    {
+<span class="pc" id="L243">        try ( InputStream in = new FileInputStream( model ) )</span>
+        {
+<span class="fc" id="L245">            XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader( in );</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">            while ( reader.hasNext() )</span>
+            {
+<span class="pc bpc" id="L248" title="1 of 4 branches missed.">                if ( reader.next() == XMLEvent.START_ELEMENT &amp;&amp; namespace.equals( reader.getNamespaceURI() )</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">                    &amp;&amp; localName.equals( reader.getLocalName() ) )</span>
+                {
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">                    for ( int i = 0; i &lt; reader.getAttributeCount(); i++ )</span>
+                    {
+<span class="fc bfc" id="L253" title="All 2 branches covered.">                        if ( &quot;name&quot;.equals( reader.getAttributeLocalName( i ) ) )</span>
+                        {
+<span class="fc" id="L255">                            return reader.getAttributeValue( i );</span>
+                        }
+                    }
+                }
+            }
+<span class="pc bpc" id="L260" title="10 of 12 branches missed.">        }</span>
+<span class="nc" id="L261">        return null;</span>
+    }
+
+    private void renderTableHeader()
+    {
+<span class="fc" id="L266">        sink.tableRow();</span>
+<span class="fc" id="L267">        sink.tableHeaderCell( SinkEventAttributeSet.LEFT );</span>
+<span class="fc" id="L268">        sink.text( &quot;Filename&quot; );</span>
+<span class="fc" id="L269">        sink.tableHeaderCell_();</span>
+<span class="fc" id="L270">        sink.tableHeaderCell( SinkEventAttributeSet.LEFT );</span>
+<span class="fc" id="L271">        sink.text( &quot;Path&quot; );</span>
+<span class="fc" id="L272">        sink.tableHeaderCell_();</span>
+<span class="fc" id="L273">        sink.tableHeaderCell( SinkEventAttributeSet.LEFT );</span>
+<span class="fc" id="L274">        sink.text( &quot;Model name&quot; );</span>
+<span class="fc" id="L275">        sink.tableHeaderCell_();</span>
+<span class="fc" id="L276">        sink.tableHeaderCell( SinkEventAttributeSet.LEFT );</span>
+<span class="fc" id="L277">        sink.text( &quot;Model type&quot; );</span>
+<span class="fc" id="L278">        sink.tableHeaderCell_();</span>
+<span class="fc" id="L279">        sink.tableRow_();</span>
+<span class="fc" id="L280">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
