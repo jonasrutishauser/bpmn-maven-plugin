@@ -42,162 +42,118 @@ import org.apache.maven.reporting.MavenReportException;
  * 
  * @author jonas
  */
-@Mojo( name = "report" )
-public class ReportMojo
-    extends AbstractMavenReport
-{
+@Mojo(name = "report")
+public class ReportMojo extends AbstractMavenReport {
 
-    @Parameter( defaultValue = "${project.basedir}/src", readonly = true )
+    @Parameter(defaultValue = "${project.basedir}/src", readonly = true)
     private File srcFolder;
 
     private ReportConfiguration configuration;
 
-    public ReportMojo()
-    {
-        this( new File( "src" ) );
+    public ReportMojo() {
+        this(new File("src"));
     }
 
-    protected ReportMojo( File srcFolder )
-    {
+    protected ReportMojo(File srcFolder) {
         this.srcFolder = srcFolder;
     }
 
-    protected ReportMojo( ReportConfiguration configuration )
-    {
+    protected ReportMojo(ReportConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    public String getName( Locale locale )
-    {
+    public String getName(Locale locale) {
         return "Business Process Models";
     }
 
-    public String getDescription( Locale locale )
-    {
+    public String getDescription(Locale locale) {
         return "Shows the projects BPMN, DMN and CMMN models.";
     }
 
-    public String getOutputName()
-    {
+    public String getOutputName() {
         return "business-process-models";
     }
 
     @Override
-    public boolean canGenerateReport()
-    {
-        try
-        {
+    public boolean canGenerateReport() {
+        try {
             return getConfiguration().canGenerateReport();
-        }
-        catch ( MavenReportException e )
-        {
-            getLog().warn( "could not determine if bpmn report should be generated", e );
+        } catch (MavenReportException e) {
+            getLog().warn("could not determine if bpmn report should be generated", e);
             return false;
         }
     }
 
-    private ReportConfiguration getConfiguration()
-        throws MavenReportException
-    {
-        if ( configuration == null )
-        {
-            configuration = new ReportConfiguration( getProject().getBasedir(), getModels( "bpmn" ), getModels( "dmn" ),
-                                                     getModels( "cmmn" ) );
+    private ReportConfiguration getConfiguration() throws MavenReportException {
+        if (configuration == null) {
+            configuration = new ReportConfiguration(getProject().getBasedir(), getModels("bpmn"), getModels("dmn"),
+                    getModels("cmmn"));
         }
         return configuration;
     }
 
     @Override
-    protected void executeReport( Locale locale )
-        throws MavenReportException
-    {
+    protected void executeReport(Locale locale) throws MavenReportException {
         final ModelsReportRenderer renderer = createRenderer();
         renderer.render();
-        copyModels( renderer );
-        copyScripts( renderer );
+        copyModels(renderer);
+        copyScripts(renderer);
     }
 
-    protected ModelsReportRenderer createRenderer()
-        throws MavenReportException
-    {
-        return new ModelsReportRenderer( getSink(), getConfiguration() );
+    protected ModelsReportRenderer createRenderer() throws MavenReportException {
+        return new ModelsReportRenderer(getSink(), getConfiguration());
     }
 
-    private void copyScripts( ModelsReportRenderer renderer )
-        throws MavenReportException
-    {
-        for ( String script : renderer.getScripts() )
-        {
-            URL source = getClass().getResource( script.substring( script.lastIndexOf( '/' ) + 1 ) );
-            if ( source == null )
-            {
-                source = getSourceFromDependency( script );
+    private void copyScripts(ModelsReportRenderer renderer) throws MavenReportException {
+        for (String script : renderer.getScripts()) {
+            URL source = getClass().getResource(script.substring(script.lastIndexOf('/') + 1));
+            if (source == null) {
+                source = getSourceFromDependency(script);
             }
-            try ( InputStream resource = source.openStream() )
-            {
-                Path target = Paths.get( getOutputDirectory(), script );
-                Files.createDirectories( target.getParent() );
-                Files.copy( resource, target, StandardCopyOption.REPLACE_EXISTING );
-            }
-            catch ( IOException e )
-            {
-                throw new MavenReportException( "failed to copy script '" + script + "' to target", e );
+            try (InputStream resource = source.openStream()) {
+                Path target = Paths.get(getOutputDirectory(), script);
+                Files.createDirectories(target.getParent());
+                Files.copy(resource, target, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new MavenReportException("failed to copy script '" + script + "' to target", e);
             }
         }
     }
 
-    private URL getSourceFromDependency( String script )
-        throws MavenReportException
-    {
-        String artifactId = script.substring( 0, script.indexOf( '/' ) );
+    private URL getSourceFromDependency(String script) throws MavenReportException {
+        String artifactId = script.substring(0, script.indexOf('/'));
         Properties pomProperties = new Properties();
-        try ( InputStream properties =
-            getClass().getResourceAsStream( "/META-INF/maven/org.webjars.bower/" + artifactId + "/pom.properties" ) )
-        {
-            pomProperties.load( properties );
+        try (InputStream properties = getClass()
+                .getResourceAsStream("/META-INF/maven/org.webjars.bower/" + artifactId + "/pom.properties")) {
+            pomProperties.load(properties);
+        } catch (IOException e) {
+            throw new MavenReportException("failed to determine version of bower script " + artifactId, e);
         }
-        catch ( IOException e )
-        {
-            throw new MavenReportException( "failed to determine version of bower script " + artifactId, e );
-        }
-        return getClass().getResource( "/META-INF/resources/webjars/" + artifactId + "/"
-            + pomProperties.getProperty( "version" ) + "/dist/" + script.substring( script.indexOf( '/' ) + 1 ) );
+        return getClass().getResource("/META-INF/resources/webjars/" + artifactId + "/"
+                + pomProperties.getProperty("version") + "/dist/" + script.substring(script.indexOf('/') + 1));
     }
 
-    private void copyModels( final ModelsReportRenderer renderer )
-        throws MavenReportException
-    {
-        for ( File model : getConfiguration().getModels().toArray( File[]::new ) )
-        {
-            try
-            {
-                Path target = Paths.get( getOutputDirectory(), renderer.getTargetFile( model ) );
-                Files.createDirectories( target.getParent() );
-                Files.copy( model.toPath(), target, StandardCopyOption.REPLACE_EXISTING );
-            }
-            catch ( IOException e )
-            {
-                throw new MavenReportException( "failed to copy model '" + model + "' to target", e );
+    private void copyModels(final ModelsReportRenderer renderer) throws MavenReportException {
+        for (File model : getConfiguration().getModels().toArray(File[]::new)) {
+            try {
+                Path target = Paths.get(getOutputDirectory(), renderer.getTargetFile(model));
+                Files.createDirectories(target.getParent());
+                Files.copy(model.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new MavenReportException("failed to copy model '" + model + "' to target", e);
             }
         }
     }
 
-    protected List<File> getModels( String type )
-        throws MavenReportException
-    {
-        if ( !srcFolder.exists() )
-        {
+    protected List<File> getModels(String type) throws MavenReportException {
+        if (!srcFolder.exists()) {
             return Collections.emptyList();
         }
-        try ( Stream<Path> stream =
-            Files.find( srcFolder.toPath(), Integer.MAX_VALUE, ( file, attributes ) -> Files.isRegularFile( file )
-                && file.toString().endsWith( "." + type ) ) )
-        {
-            return stream.map( Path::toFile ).collect( Collectors.toList() );
-        }
-        catch ( IOException e )
-        {
-            throw new MavenReportException( "could not find " + type + " files", e );
+        try (Stream<Path> stream = Files.find(srcFolder.toPath(), Integer.MAX_VALUE,
+                (file, attributes) -> Files.isRegularFile(file) && file.toString().endsWith("." + type))) {
+            return stream.map(Path::toFile).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new MavenReportException("could not find " + type + " files", e);
         }
     }
 

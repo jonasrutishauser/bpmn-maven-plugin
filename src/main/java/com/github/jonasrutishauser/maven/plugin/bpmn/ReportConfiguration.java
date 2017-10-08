@@ -21,8 +21,7 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ReportConfiguration
-{
+public class ReportConfiguration {
 
     private final File basedir;
 
@@ -32,57 +31,47 @@ public class ReportConfiguration
 
     private final List<File> cmmns;
 
-    public ReportConfiguration( File basedir, List<File> bpmns, List<File> dmns, List<File> cmmns )
-    {
+    public ReportConfiguration(File basedir, List<File> bpmns, List<File> dmns, List<File> cmmns) {
         this.basedir = basedir;
         this.bpmns = bpmns;
         this.dmns = dmns;
         this.cmmns = cmmns;
     }
 
-    public boolean canGenerateReport()
-    {
+    public boolean canGenerateReport() {
         return hasBpmn() || hasDmn() || hasCmmn();
     }
 
-    public boolean hasBpmn()
-    {
+    public boolean hasBpmn() {
         return !bpmns.isEmpty();
     }
 
-    public boolean hasDmn()
-    {
+    public boolean hasDmn() {
         return !dmns.isEmpty();
     }
 
-    public boolean hasCmmn()
-    {
+    public boolean hasCmmn() {
         return !cmmns.isEmpty();
     }
 
-    public File getBasedir()
-    {
+    public File getBasedir() {
         return basedir;
     }
 
-    public List<File> getBpmns()
-    {
+    public List<File> getBpmns() {
         return bpmns;
     }
 
-    public List<File> getDmns()
-    {
+    public List<File> getDmns() {
         return dmns;
     }
 
-    public List<File> getCmmns()
-    {
+    public List<File> getCmmns() {
         return cmmns;
     }
 
-    public Stream<File> getModels()
-    {
-        return Stream.concat( bpmns.stream(), Stream.concat( dmns.stream(), cmmns.stream() ) );
+    public Stream<File> getModels() {
+        return Stream.concat(bpmns.stream(), Stream.concat(dmns.stream(), cmmns.stream()));
     }
 
 }
