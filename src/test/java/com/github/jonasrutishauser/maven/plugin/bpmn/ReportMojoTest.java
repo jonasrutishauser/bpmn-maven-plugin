@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -33,9 +34,12 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -48,9 +52,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.github.jonasrutishauser.maven.plugin.bpmn.ModelsReportRenderer;
-import com.github.jonasrutishauser.maven.plugin.bpmn.ReportConfiguration;
-import com.github.jonasrutishauser.maven.plugin.bpmn.ReportMojo;
 import com.github.jonasrutishauser.maven.plugin.bpmn.junit.extension.TemporaryFolderExtension;
 import com.github.jonasrutishauser.maven.plugin.bpmn.junit.extension.TemporaryFolderExtension.Root;
 
@@ -123,6 +124,19 @@ public class ReportMojoTest {
         List<File> models = testee.getModels("bpmn");
 
         assertThat(models, containsInAnyOrder(testFile1.toFile(), testFile2.toFile()));
+    }
+
+    @Test
+    @DisplayName("getModels() invalid directory throws exception")
+    void getModels_invalidDirectory_exception(@Root Path tempFolder) throws IOException {
+        Path dir = tempFolder.resolve("models");
+        ReportMojo testee = new ReportMojo(dir.toFile());
+        Files.createDirectory(dir, PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("-w-------")));
+
+        MavenReportException exception = assertThrows(MavenReportException.class, () -> testee.getModels("bpmn"));
+
+        Files.delete(dir);
+        assertEquals("could not find bpmn files", exception.getMessage());
     }
 
     @Test
@@ -216,6 +230,33 @@ public class ReportMojoTest {
     }
 
     @Test
+    @DisplayName("executeReport() copy invalid model")
+    void executeReport_copyInvalidModel(@Root Path tempFolder) throws MavenReportException, IOException, URISyntaxException {
+        ModelsReportRenderer renderer = mock(ModelsReportRenderer.class);
+        ReportConfiguration configuration = mock(ReportConfiguration.class);
+        ReportMojo testee = new ReportMojo(configuration) {
+
+            @Override
+            protected ModelsReportRenderer createRenderer() throws MavenReportException {
+                return renderer;
+            }
+
+            @Override
+            protected String getOutputDirectory() {
+                return tempFolder.toAbsolutePath().toString();
+            }
+        };
+        Path testFile = tempFolder.resolve("test.bpmn");
+        Files.createFile(testFile, PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("-w-------")));
+        when(configuration.getModels()).thenReturn(Stream.of(testFile.toFile()));
+        when(renderer.getTargetFile(testFile.toFile())).thenReturn("target.bpmn");
+
+        MavenReportException exception = assertThrows(MavenReportException.class, () -> testee.executeReport(Locale.ENGLISH));
+
+        assertEquals("failed to copy model '" + testFile + "' to target", exception.getMessage());
+    }
+
+    @Test
     @DisplayName("executeReport() copies own script")
     void executeReport_copiesOwnScript(@Root Path tempFolder) throws MavenReportException, IOException {
         ModelsReportRenderer renderer = mock(ModelsReportRenderer.class);
@@ -261,6 +302,34 @@ public class ReportMojoTest {
         testee.executeReport(Locale.ENGLISH);
 
         assertTrue(Files.isRegularFile(tempFolder.resolve("bpmn-js/bpmn-viewer.min.js")));
+    }
+
+    @Test
+    @DisplayName("executeReport() copy invalid script")
+    void executeReport_copyInvalidScript(@Root Path tempFolder) throws MavenReportException, IOException, URISyntaxException {
+        ModelsReportRenderer renderer = mock(ModelsReportRenderer.class);
+        ReportConfiguration configuration = mock(ReportConfiguration.class);
+        ReportMojo testee = new ReportMojo(configuration) {
+
+            @Override
+            protected ModelsReportRenderer createRenderer() throws MavenReportException {
+                return renderer;
+            }
+
+            @Override
+            protected String getOutputDirectory() {
+                return tempFolder.toAbsolutePath().toString();
+            }
+        };
+        when(renderer.getScripts()).thenReturn(Collections.singleton("test/invalid.js"));
+        Path script = Paths.get(getClass().getResource(getClass().getSimpleName() + ".class").toURI()).getParent()
+                .resolve("invalid.js");
+        Files.delete(script);
+        Files.createFile(script, PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("-w-------")));
+
+        MavenReportException exception = assertThrows(MavenReportException.class, () -> testee.executeReport(Locale.ENGLISH));
+
+        assertEquals("failed to copy script 'test/invalid.js' to target", exception.getMessage());
     }
 
 }
