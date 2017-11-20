@@ -132,7 +132,7 @@ public class ModelsReportRendererTest {
     void getDecisionName_aBpmn_null() throws IOException {
         ModelsReportRenderer testee = new ModelsReportRenderer(null, null);
 
-        String name = testee.getDecisionName(new File(MODELS_DIRECTORY, "model.bpmn"));
+        String name = testee.getDecisionName(new File(MODELS_DIRECTORY, "diagram.bpmn"));
 
         assertNull(name);
     }
@@ -219,6 +219,19 @@ public class ModelsReportRendererTest {
         Set<String> scripts = testee.getScripts();
 
         assertEquals(new HashSet<>(Arrays.asList("cmmn-js/cmmn.js", "cmmn-js/cmmn-viewer.min.js")), scripts);
+    }
+
+    @Test
+    @DisplayName("getTargetFile() windows path replaced correctly")
+    void getTargetFile_windowsPath() throws IOException {
+        ModelsReportRenderer testee = new ModelsReportRenderer(
+                new SiteRendererSink(new RenderingContext(BASEDIR, "test.html")),
+                new ReportConfiguration(new File(""), Collections.emptyList(), Collections.emptyList(),
+                        Collections.singletonList(new File(MODELS_DIRECTORY, "diagram.cmmn"))));
+
+        String targetFile = testee.getTargetFile(new File("test\\foo/model.bpmn"));
+
+        assertEquals("models/test-foo-model.bpmn", targetFile);
     }
 
     private String getContent(String filename) throws IOException {

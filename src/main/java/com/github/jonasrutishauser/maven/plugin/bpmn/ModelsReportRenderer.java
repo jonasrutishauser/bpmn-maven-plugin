@@ -76,7 +76,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
     }
 
     public String getTargetFile(File model) {
-        return "models/" + getPath(model).replaceAll("[\\/]", "-") + "-" + model.getName();
+        return "models/" + getPath(model).replaceAll("[\\\\/]", "-") + "-" + model.getName();
     }
 
     public Set<String> getScripts() {
@@ -126,7 +126,8 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
     }
 
     private String getPath(File bpmn) {
-        return bpmn.getParent().replace(configuration.getBasedir().getAbsolutePath() + "/", "");
+        return configuration.getBasedir().getAbsoluteFile().toPath()
+                .relativize(bpmn.getParentFile().getAbsoluteFile().toPath()).toString();
     }
 
     private void renderModels(List<File> models, String type) {
