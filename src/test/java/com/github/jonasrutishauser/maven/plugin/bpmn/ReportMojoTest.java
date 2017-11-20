@@ -324,7 +324,9 @@ public class ReportMojoTest {
         when(renderer.getScripts()).thenReturn(Collections.singleton("test/invalid.js"));
         Path script = Paths.get(getClass().getResource(getClass().getSimpleName() + ".class").toURI()).getParent()
                 .resolve("invalid.js");
-        Files.delete(script);
+        if (Files.exists(script)) {
+            Files.delete(script);
+        }
         Files.createFile(script, PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("-w-------")));
 
         MavenReportException exception = assertThrows(MavenReportException.class, () -> testee.executeReport(Locale.ENGLISH));
