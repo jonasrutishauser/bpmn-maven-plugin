@@ -1,0 +1,4 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+BPMN Maven Plugin,com.github.jonasrutishauser.maven.plugin.bpmn,ModelsReportRenderer,71,627,16,24,10,116,12,27,0,19
+BPMN Maven Plugin,com.github.jonasrutishauser.maven.plugin.bpmn,ReportConfiguration,10,66,8,4,0,15,6,10,0,10
+BPMN Maven Plugin,com.github.jonasrutishauser.maven.plugin.bpmn,ReportMojo,168,308,19,19,12,51,14,21,1,15
