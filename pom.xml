@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
 			<artifactId>bpmn-js</artifactId>
-			<version>0.22.1</version>
+			<version>0.24.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
