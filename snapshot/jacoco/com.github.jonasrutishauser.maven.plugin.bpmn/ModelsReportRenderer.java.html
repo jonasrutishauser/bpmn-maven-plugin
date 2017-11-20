@@ -76,7 +76,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
     }
 
     public String getTargetFile(File model) {
-<span class="fc" id="L79">        return &quot;models/&quot; + getPath(model).replaceAll(&quot;[\\/]&quot;, &quot;-&quot;) + &quot;-&quot; + model.getName();</span>
+<span class="fc" id="L79">        return &quot;models/&quot; + getPath(model).replaceAll(&quot;[\\\\/]&quot;, &quot;-&quot;) + &quot;-&quot; + model.getName();</span>
     }
 
     public Set&lt;String&gt; getScripts() {
@@ -126,114 +126,115 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 <span class="fc" id="L126">    }</span>
 
     private String getPath(File bpmn) {
-<span class="fc" id="L129">        return bpmn.getParent().replace(configuration.getBasedir().getAbsolutePath() + &quot;/&quot;, &quot;&quot;);</span>
+<span class="fc" id="L129">        return configuration.getBasedir().getAbsoluteFile().toPath()</span>
+<span class="fc" id="L130">                .relativize(bpmn.getParentFile().getAbsoluteFile().toPath()).toString();</span>
     }
 
     private void renderModels(List&lt;File&gt; models, String type) {
-<span class="fc" id="L133">        sourceJavaScript(type + &quot;-js/&quot; + type + &quot;-viewer.min.js&quot;);</span>
-<span class="fc" id="L134">        sourceJavaScript(type + &quot;-js/&quot; + type + &quot;.js&quot;);</span>
-<span class="fc bfc" id="L135" title="All 2 branches covered.">        for (File model : models) {</span>
-<span class="fc" id="L136">            startSection(model.getName());</span>
-<span class="fc" id="L137">            container(getTargetFile(model).replace(&quot;models/&quot;, &quot;&quot;));</span>
-<span class="fc" id="L138">            javaScript(&quot;show&quot; + Character.toUpperCase(type.charAt(0)) + type.substring(1) + &quot;(document.getElementById('&quot;</span>
-<span class="fc" id="L139">                    + getTargetFile(model).replace(&quot;models/&quot;, &quot;&quot;) + &quot;'), '&quot; + getTargetFile(model) + &quot;');&quot;);</span>
-<span class="fc" id="L140">            endSection();</span>
-<span class="fc" id="L141">        }</span>
-<span class="fc" id="L142">    }</span>
+<span class="fc" id="L134">        sourceJavaScript(type + &quot;-js/&quot; + type + &quot;-viewer.min.js&quot;);</span>
+<span class="fc" id="L135">        sourceJavaScript(type + &quot;-js/&quot; + type + &quot;.js&quot;);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        for (File model : models) {</span>
+<span class="fc" id="L137">            startSection(model.getName());</span>
+<span class="fc" id="L138">            container(getTargetFile(model).replace(&quot;models/&quot;, &quot;&quot;));</span>
+<span class="fc" id="L139">            javaScript(&quot;show&quot; + Character.toUpperCase(type.charAt(0)) + type.substring(1) + &quot;(document.getElementById('&quot;</span>
+<span class="fc" id="L140">                    + getTargetFile(model).replace(&quot;models/&quot;, &quot;&quot;) + &quot;'), '&quot; + getTargetFile(model) + &quot;');&quot;);</span>
+<span class="fc" id="L141">            endSection();</span>
+<span class="fc" id="L142">        }</span>
+<span class="fc" id="L143">    }</span>
 
     private void container(String id) {
-<span class="fc" id="L145">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
-<span class="fc" id="L146">        atts.addAttribute(SinkEventAttributes.ID, id);</span>
-<span class="fc" id="L147">        sink.unknown(&quot;div&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);</span>
-<span class="fc" id="L148">        sink.unknown(&quot;div&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);</span>
-<span class="fc" id="L149">    }</span>
+<span class="fc" id="L146">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L147">        atts.addAttribute(SinkEventAttributes.ID, id);</span>
+<span class="fc" id="L148">        sink.unknown(&quot;div&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);</span>
+<span class="fc" id="L149">        sink.unknown(&quot;div&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);</span>
+<span class="fc" id="L150">    }</span>
 
     protected void javaScript(String script) {
-<span class="fc" id="L152">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
-<span class="fc" id="L153">        atts.addAttribute(SinkEventAttributes.TYPE, &quot;text/javascript&quot;);</span>
-<span class="fc" id="L154">        sink.unknown(&quot;script&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);</span>
-<span class="fc" id="L155">        sink.text(script);</span>
-<span class="fc" id="L156">        sink.unknown(&quot;script&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);</span>
-<span class="fc" id="L157">    }</span>
+<span class="fc" id="L153">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L154">        atts.addAttribute(SinkEventAttributes.TYPE, &quot;text/javascript&quot;);</span>
+<span class="fc" id="L155">        sink.unknown(&quot;script&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);</span>
+<span class="fc" id="L156">        sink.text(script);</span>
+<span class="fc" id="L157">        sink.unknown(&quot;script&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);</span>
+<span class="fc" id="L158">    }</span>
 
     private void stylesheet(String href) {
-<span class="fc" id="L160">        scripts.add(href);</span>
-<span class="fc" id="L161">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
-<span class="fc" id="L162">        atts.addAttribute(SinkEventAttributes.REL, &quot;stylesheet&quot;);</span>
-<span class="fc" id="L163">        atts.addAttribute(SinkEventAttributes.HREF, href);</span>
-<span class="fc" id="L164">        sink.unknown(&quot;link&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_SIMPLE)}, atts);</span>
-<span class="fc" id="L165">    }</span>
+<span class="fc" id="L161">        scripts.add(href);</span>
+<span class="fc" id="L162">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L163">        atts.addAttribute(SinkEventAttributes.REL, &quot;stylesheet&quot;);</span>
+<span class="fc" id="L164">        atts.addAttribute(SinkEventAttributes.HREF, href);</span>
+<span class="fc" id="L165">        sink.unknown(&quot;link&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_SIMPLE)}, atts);</span>
+<span class="fc" id="L166">    }</span>
 
     private void sourceJavaScript(String src) {
-<span class="fc" id="L168">        scripts.add(src);</span>
-<span class="fc" id="L169">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
-<span class="fc" id="L170">        atts.addAttribute(SinkEventAttributes.SRC, src);</span>
-<span class="fc" id="L171">        atts.addAttribute(SinkEventAttributes.TYPE, &quot;text/javascript&quot;);</span>
-<span class="fc" id="L172">        sink.unknown(&quot;script&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);</span>
-<span class="fc" id="L173">        sink.unknown(&quot;script&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);</span>
-<span class="fc" id="L174">    }</span>
+<span class="fc" id="L169">        scripts.add(src);</span>
+<span class="fc" id="L170">        SinkEventAttributeSet atts = new SinkEventAttributeSet();</span>
+<span class="fc" id="L171">        atts.addAttribute(SinkEventAttributes.SRC, src);</span>
+<span class="fc" id="L172">        atts.addAttribute(SinkEventAttributes.TYPE, &quot;text/javascript&quot;);</span>
+<span class="fc" id="L173">        sink.unknown(&quot;script&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);</span>
+<span class="fc" id="L174">        sink.unknown(&quot;script&quot;, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);</span>
+<span class="fc" id="L175">    }</span>
 
     protected String getProcessName(File bpmn) {
         try {
-<span class="fc" id="L178">            return getModelName(bpmn, &quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot;, &quot;process&quot;);</span>
-<span class="fc" id="L179">        } catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
-<span class="fc" id="L180">            logger.warn(&quot;failed to get bpmn process name&quot;, e);</span>
-<span class="fc" id="L181">            return null;</span>
+<span class="fc" id="L179">            return getModelName(bpmn, &quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot;, &quot;process&quot;);</span>
+<span class="fc" id="L180">        } catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L181">            logger.warn(&quot;failed to get bpmn process name&quot;, e);</span>
+<span class="fc" id="L182">            return null;</span>
         }
     }
 
     protected String getDecisionName(File dmn) {
         try {
-<span class="fc" id="L187">            return getModelName(dmn, &quot;http://www.omg.org/spec/DMN/20151101/dmn.xsd&quot;, &quot;decision&quot;);</span>
-<span class="fc" id="L188">        } catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
-<span class="fc" id="L189">            logger.warn(&quot;failed to get dmn decision name&quot;, e);</span>
-<span class="fc" id="L190">            return null;</span>
+<span class="fc" id="L188">            return getModelName(dmn, &quot;http://www.omg.org/spec/DMN/20151101/dmn.xsd&quot;, &quot;decision&quot;);</span>
+<span class="fc" id="L189">        } catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L190">            logger.warn(&quot;failed to get dmn decision name&quot;, e);</span>
+<span class="fc" id="L191">            return null;</span>
         }
     }
 
     protected String getCaseName(File cmmn) {
         try {
-<span class="fc" id="L196">            return getModelName(cmmn, &quot;http://www.omg.org/spec/CMMN/20151109/MODEL&quot;, &quot;case&quot;);</span>
-<span class="fc" id="L197">        } catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
-<span class="fc" id="L198">            logger.warn(&quot;failed to get cmmn case name&quot;, e);</span>
-<span class="fc" id="L199">            return null;</span>
+<span class="fc" id="L197">            return getModelName(cmmn, &quot;http://www.omg.org/spec/CMMN/20151109/MODEL&quot;, &quot;case&quot;);</span>
+<span class="fc" id="L198">        } catch (XMLStreamException | FactoryConfigurationError | IOException e) {</span>
+<span class="fc" id="L199">            logger.warn(&quot;failed to get cmmn case name&quot;, e);</span>
+<span class="fc" id="L200">            return null;</span>
         }
     }
 
     private String getModelName(File model, String namespace, String localName)
             throws XMLStreamException, FactoryConfigurationError, IOException {
-<span class="pc" id="L205">        try (InputStream in = new FileInputStream(model)) {</span>
-<span class="fc" id="L206">            XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(in);</span>
-<span class="fc bfc" id="L207" title="All 2 branches covered.">            while (reader.hasNext()) {</span>
-<span class="fc bfc" id="L208" title="All 4 branches covered.">                if (reader.next() == XMLEvent.START_ELEMENT &amp;&amp; namespace.equals(reader.getNamespaceURI())</span>
-<span class="fc bfc" id="L209" title="All 2 branches covered.">                        &amp;&amp; localName.equals(reader.getLocalName())) {</span>
-<span class="pc bpc" id="L210" title="1 of 2 branches missed.">                    for (int i = 0; i &lt; reader.getAttributeCount(); i++) {</span>
-<span class="fc bfc" id="L211" title="All 2 branches covered.">                        if (&quot;name&quot;.equals(reader.getAttributeLocalName(i))) {</span>
-<span class="fc" id="L212">                            return reader.getAttributeValue(i);</span>
+<span class="pc" id="L206">        try (InputStream in = new FileInputStream(model)) {</span>
+<span class="fc" id="L207">            XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(in);</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">            while (reader.hasNext()) {</span>
+<span class="fc bfc" id="L209" title="All 4 branches covered.">                if (reader.next() == XMLEvent.START_ELEMENT &amp;&amp; namespace.equals(reader.getNamespaceURI())</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">                        &amp;&amp; localName.equals(reader.getLocalName())) {</span>
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">                    for (int i = 0; i &lt; reader.getAttributeCount(); i++) {</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">                        if (&quot;name&quot;.equals(reader.getAttributeLocalName(i))) {</span>
+<span class="fc" id="L213">                            return reader.getAttributeValue(i);</span>
                         }
                     }
                 }
             }
-<span class="pc bpc" id="L217" title="8 of 12 branches missed.">        }</span>
-<span class="fc" id="L218">        return null;</span>
+<span class="pc bpc" id="L218" title="8 of 12 branches missed.">        }</span>
+<span class="fc" id="L219">        return null;</span>
     }
 
     private void renderTableHeader() {
-<span class="fc" id="L222">        sink.tableRow();</span>
-<span class="fc" id="L223">        sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
-<span class="fc" id="L224">        sink.text(&quot;Filename&quot;);</span>
-<span class="fc" id="L225">        sink.tableHeaderCell_();</span>
-<span class="fc" id="L226">        sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
-<span class="fc" id="L227">        sink.text(&quot;Path&quot;);</span>
-<span class="fc" id="L228">        sink.tableHeaderCell_();</span>
-<span class="fc" id="L229">        sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
-<span class="fc" id="L230">        sink.text(&quot;Model name&quot;);</span>
-<span class="fc" id="L231">        sink.tableHeaderCell_();</span>
-<span class="fc" id="L232">        sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
-<span class="fc" id="L233">        sink.text(&quot;Model type&quot;);</span>
-<span class="fc" id="L234">        sink.tableHeaderCell_();</span>
-<span class="fc" id="L235">        sink.tableRow_();</span>
-<span class="fc" id="L236">    }</span>
+<span class="fc" id="L223">        sink.tableRow();</span>
+<span class="fc" id="L224">        sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
+<span class="fc" id="L225">        sink.text(&quot;Filename&quot;);</span>
+<span class="fc" id="L226">        sink.tableHeaderCell_();</span>
+<span class="fc" id="L227">        sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
+<span class="fc" id="L228">        sink.text(&quot;Path&quot;);</span>
+<span class="fc" id="L229">        sink.tableHeaderCell_();</span>
+<span class="fc" id="L230">        sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
+<span class="fc" id="L231">        sink.text(&quot;Model name&quot;);</span>
+<span class="fc" id="L232">        sink.tableHeaderCell_();</span>
+<span class="fc" id="L233">        sink.tableHeaderCell(SinkEventAttributeSet.LEFT);</span>
+<span class="fc" id="L234">        sink.text(&quot;Model type&quot;);</span>
+<span class="fc" id="L235">        sink.tableHeaderCell_();</span>
+<span class="fc" id="L236">        sink.tableRow_();</span>
+<span class="fc" id="L237">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
