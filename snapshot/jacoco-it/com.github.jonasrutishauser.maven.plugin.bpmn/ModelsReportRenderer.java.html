@@ -208,7 +208,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 <span class="pc bpc" id="L208" title="1 of 2 branches missed.">            while (reader.hasNext()) {</span>
 <span class="pc bpc" id="L209" title="1 of 4 branches missed.">                if (reader.next() == XMLEvent.START_ELEMENT &amp;&amp; namespace.equals(reader.getNamespaceURI())</span>
 <span class="fc bfc" id="L210" title="All 2 branches covered.">                        &amp;&amp; localName.equals(reader.getLocalName())) {</span>
-<span class="pc bpc" id="L211" title="1 of 2 branches missed.">                    for (int i = 0; i &lt; reader.getAttributeCount(); i++) {</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">                    for (int i = 0; i &lt; reader.getAttributeCount(); i++) {</span>
 <span class="fc bfc" id="L212" title="All 2 branches covered.">                        if (&quot;name&quot;.equals(reader.getAttributeLocalName(i))) {</span>
 <span class="fc" id="L213">                            return reader.getAttributeValue(i);</span>
                         }

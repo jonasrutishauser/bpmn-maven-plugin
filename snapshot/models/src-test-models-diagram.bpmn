@@ -3,6 +3,8 @@
   <bpmn:collaboration id="Collaboration_1tmodd0">
     <bpmn:participant id="Participant_0zkp5v5" name="Test" processRef="Process_1" />
   </bpmn:collaboration>
+  <bpmn:process id="empty_process">
+  </bpmn:process>
   <bpmn:process id="Process_1" name="Test Model" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1lfhddt</bpmn:outgoing>

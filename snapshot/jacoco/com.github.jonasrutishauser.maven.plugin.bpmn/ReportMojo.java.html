@@ -115,7 +115,7 @@ public class ReportMojo extends AbstractMavenReport {
 <span class="fc" id="L115">                Files.createDirectories(target.getParent());</span>
 <span class="fc" id="L116">                Files.copy(resource, target, StandardCopyOption.REPLACE_EXISTING);</span>
 <span class="pc bpc" id="L117" title="6 of 8 branches missed.">            } catch (IOException e) {</span>
-<span class="nc" id="L118">                throw new MavenReportException(&quot;failed to copy script '&quot; + script + &quot;' to target&quot;, e);</span>
+<span class="fc" id="L118">                throw new MavenReportException(&quot;failed to copy script '&quot; + script + &quot;' to target&quot;, e);</span>
 <span class="fc" id="L119">            }</span>
 <span class="fc" id="L120">        }</span>
 <span class="fc" id="L121">    }</span>
@@ -139,8 +139,8 @@ public class ReportMojo extends AbstractMavenReport {
 <span class="fc" id="L139">                Path target = Paths.get(getOutputDirectory(), renderer.getTargetFile(model));</span>
 <span class="fc" id="L140">                Files.createDirectories(target.getParent());</span>
 <span class="fc" id="L141">                Files.copy(model.toPath(), target, StandardCopyOption.REPLACE_EXISTING);</span>
-<span class="nc" id="L142">            } catch (IOException e) {</span>
-<span class="nc" id="L143">                throw new MavenReportException(&quot;failed to copy model '&quot; + model + &quot;' to target&quot;, e);</span>
+<span class="fc" id="L142">            } catch (IOException e) {</span>
+<span class="fc" id="L143">                throw new MavenReportException(&quot;failed to copy model '&quot; + model + &quot;' to target&quot;, e);</span>
 <span class="fc" id="L144">            }</span>
         }
 <span class="fc" id="L146">    }</span>
@@ -153,7 +153,7 @@ public class ReportMojo extends AbstractMavenReport {
 <span class="fc bfc" id="L153" title="All 4 branches covered.">                (file, attributes) -&gt; Files.isRegularFile(file) &amp;&amp; file.toString().endsWith(&quot;.&quot; + type))) {</span>
 <span class="fc" id="L154">            return stream.map(Path::toFile).collect(Collectors.toList());</span>
 <span class="pc bpc" id="L155" title="6 of 8 branches missed.">        } catch (IOException e) {</span>
-<span class="nc" id="L156">            throw new MavenReportException(&quot;could not find &quot; + type + &quot; files&quot;, e);</span>
+<span class="fc" id="L156">            throw new MavenReportException(&quot;could not find &quot; + type + &quot; files&quot;, e);</span>
         }
     }
 
