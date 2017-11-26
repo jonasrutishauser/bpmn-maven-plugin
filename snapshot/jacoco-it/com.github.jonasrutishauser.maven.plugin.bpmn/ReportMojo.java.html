@@ -150,7 +150,7 @@ public class ReportMojo extends AbstractMavenReport {
 <span class="nc" id="L150">            return Collections.emptyList();</span>
         }
 <span class="pc" id="L152">        try (Stream&lt;Path&gt; stream = Files.find(srcFolder.toPath(), Integer.MAX_VALUE,</span>
-<span class="fc bfc" id="L153" title="All 4 branches covered.">                (file, attributes) -&gt; Files.isRegularFile(file) &amp;&amp; file.toString().endsWith(&quot;.&quot; + type))) {</span>
+<span class="fc bfc" id="L153" title="All 4 branches covered.">                (file, attributes) -&gt; file.toFile().isFile() &amp;&amp; file.toString().endsWith(&quot;.&quot; + type))) {</span>
 <span class="fc" id="L154">            return stream.map(Path::toFile).collect(Collectors.toList());</span>
 <span class="pc bpc" id="L155" title="6 of 8 branches missed.">        } catch (IOException e) {</span>
 <span class="nc" id="L156">            throw new MavenReportException(&quot;could not find &quot; + type + &quot; files&quot;, e);</span>
