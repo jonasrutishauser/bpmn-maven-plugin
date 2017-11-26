@@ -41,6 +41,10 @@ import org.slf4j.LoggerFactory;
 
 public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 
+    private static final String MODELS_PATH = "models/";
+
+    private static final String SCRIPT_TAG = "script";
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final ReportConfiguration configuration;
@@ -52,6 +56,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
         this.configuration = configuration;
     }
 
+    @Override
     public void render() {
         sink.head();
         sink.title();
@@ -76,7 +81,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
     }
 
     public String getTargetFile(File model) {
-        return "models/" + getPath(model).replaceAll("[\\\\/]", "-") + "-" + model.getName();
+        return MODELS_PATH + getPath(model).replaceAll("[\\\\/]", "-") + "-" + model.getName();
     }
 
     public Set<String> getScripts() {
@@ -135,9 +140,9 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
         sourceJavaScript(type + "-js/" + type + ".js");
         for (File model : models) {
             startSection(model.getName());
-            container(getTargetFile(model).replace("models/", ""));
+            container(getTargetFile(model).replace(MODELS_PATH, ""));
             javaScript("show" + Character.toUpperCase(type.charAt(0)) + type.substring(1) + "(document.getElementById('"
-                    + getTargetFile(model).replace("models/", "") + "'), '" + getTargetFile(model) + "');");
+                    + getTargetFile(model).replace(MODELS_PATH, "") + "'), '" + getTargetFile(model) + "');");
             endSection();
         }
     }
@@ -149,12 +154,13 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
         sink.unknown("div", new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);
     }
 
+    @Override
     protected void javaScript(String script) {
         SinkEventAttributeSet atts = new SinkEventAttributeSet();
         atts.addAttribute(SinkEventAttributes.TYPE, "text/javascript");
-        sink.unknown("script", new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);
+        sink.unknown(SCRIPT_TAG, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);
         sink.text(script);
-        sink.unknown("script", new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);
+        sink.unknown(SCRIPT_TAG, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);
     }
 
     private void stylesheet(String href) {
@@ -170,8 +176,8 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
         SinkEventAttributeSet atts = new SinkEventAttributeSet();
         atts.addAttribute(SinkEventAttributes.SRC, src);
         atts.addAttribute(SinkEventAttributes.TYPE, "text/javascript");
-        sink.unknown("script", new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);
-        sink.unknown("script", new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);
+        sink.unknown(SCRIPT_TAG, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, atts);
+        sink.unknown(SCRIPT_TAG, new Object[] {Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);
     }
 
     protected String getProcessName(File bpmn) {

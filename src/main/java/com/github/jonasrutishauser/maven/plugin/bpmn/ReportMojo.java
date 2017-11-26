@@ -150,7 +150,7 @@ public class ReportMojo extends AbstractMavenReport {
             return Collections.emptyList();
         }
         try (Stream<Path> stream = Files.find(srcFolder.toPath(), Integer.MAX_VALUE,
-                (file, attributes) -> Files.isRegularFile(file) && file.toString().endsWith("." + type))) {
+                (file, attributes) -> file.toFile().isFile() && file.toString().endsWith("." + type))) {
             return stream.map(Path::toFile).collect(Collectors.toList());
         } catch (IOException e) {
             throw new MavenReportException("could not find " + type + " files", e);
