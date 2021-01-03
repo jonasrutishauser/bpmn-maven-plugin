@@ -16,22 +16,24 @@
  */
 
 function showDmn( container, url ) {
-   var viewer = new DmnJS( { container } );
-   var xhr = new XMLHttpRequest();
+   const viewer = new DmnJS( { container } );
+   const xhr = new XMLHttpRequest();
    xhr.onreadystatechange = function() {
       if ( xhr.readyState === 4 ) {
          viewer.importXML(xhr.response, function(err) {
             if (!err) {
-               viewer.showDecision(viewer.getDecisions()[0]);
-               viewer.on('view.switch', function() {
-                  if (viewer.getActiveEditor().table) {
-                     var canvas=viewer.get('canvas');
-                     canvas.zoom( 1, 'auto' );
-                     container.style.height = canvas.viewbox().inner.height + canvas.viewbox().inner.y + 10 + 'px';
-                     container.style.width = canvas.viewbox().inner.width + canvas.viewbox().inner.x + 100 + 'px';
-                  } else {
+               const decisionTableViews = viewer.getViews().filter(({type}) => type === 'decisionTable');
+               if (decisionTableViews.length === 1) {
+                  viewer.open(decisionTableViews[0]);
+               }
+               viewer.on('views.changed', function() {
+                  if ( viewer.getActiveView().type === 'decisionTable') {
                      container.style.height='';
                      container.style.width='';
+                  } else {
+                     const canvas = viewer.getActiveViewer().get('canvas');
+                     container.style.height = canvas.viewbox().inner.height + canvas.viewbox().inner.y + 10 + 'px';
+                     container.style.width = canvas.viewbox().inner.width + canvas.viewbox().inner.x + 100 + 'px';
                   }
                });
             }

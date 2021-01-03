@@ -124,7 +124,7 @@ public class ReportMojo extends AbstractMavenReport {
         String artifactId = script.substring(0, script.indexOf('/'));
         Properties pomProperties = new Properties();
         try (InputStream properties = getClass()
-                .getResourceAsStream("/META-INF/maven/org.webjars.bower/" + artifactId + "/pom.properties")) {
+                .getResourceAsStream("/META-INF/maven/org.webjars.npm/" + artifactId + "/pom.properties")) {
             pomProperties.load(properties);
         } catch (IOException e) {
             throw new MavenReportException("failed to determine version of bower script " + artifactId, e);

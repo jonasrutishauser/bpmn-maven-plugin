@@ -297,11 +297,11 @@ public class ReportMojoTest {
                 return tempFolder.toAbsolutePath().toString();
             }
         };
-        when(renderer.getScripts()).thenReturn(Collections.singleton("bpmn-js/bpmn-viewer.min.js"));
+        when(renderer.getScripts()).thenReturn(Collections.singleton("bpmn-js/bpmn-viewer.production.min.js"));
 
         testee.executeReport(Locale.ENGLISH);
 
-        assertTrue(Files.isRegularFile(tempFolder.resolve("bpmn-js/bpmn-viewer.min.js")));
+        assertTrue(Files.isRegularFile(tempFolder.resolve("bpmn-js/bpmn-viewer.production.min.js")));
     }
 
     @Test

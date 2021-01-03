@@ -33,9 +33,6 @@ import org.apache.maven.shared.utils.io.IOUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.github.jonasrutishauser.maven.plugin.bpmn.ModelsReportRenderer;
-import com.github.jonasrutishauser.maven.plugin.bpmn.ReportConfiguration;
-
 @DisplayName("ModelsReportRenderer")
 public class ModelsReportRendererTest {
 
@@ -189,7 +186,7 @@ public class ModelsReportRendererTest {
 
         Set<String> scripts = testee.getScripts();
 
-        assertEquals(new HashSet<>(Arrays.asList("bpmn-js/bpmn.js", "bpmn-js/bpmn-viewer.min.js")), scripts);
+        assertEquals(new HashSet<>(Arrays.asList("bpmn-js/bpmn.js", "bpmn-js/bpmn-viewer.production.min.js")), scripts);
     }
 
     @Test
@@ -203,8 +200,12 @@ public class ModelsReportRendererTest {
 
         Set<String> scripts = testee.getScripts();
 
-        assertEquals(new HashSet<>(Arrays.asList("dmn-js/dmn.js", "dmn-js/dmn-viewer.min.js", "dmn-js/css/dmn-js.css")),
-                scripts);
+        assertEquals(new HashSet<>(Arrays.asList("dmn-js/dmn.js", "dmn-js/dmn-viewer.production.min.js",
+                "dmn-js/assets/dmn-js-drd.css", "dmn-js/assets/dmn-js-decision-table.css",
+                "dmn-js/assets/dmn-js-literal-expression.css", "dmn-js/assets/dmn-js-shared.css",
+                "dmn-js/assets/dmn-font/css/dmn.css", "dmn-js/assets/dmn-font/font/dmn.eot",
+                "dmn-js/assets/dmn-font/font/dmn.svg", "dmn-js/assets/dmn-font/font/dmn.ttf",
+                "dmn-js/assets/dmn-font/font/dmn.woff", "dmn-js/assets/dmn-font/font/dmn.woff2")), scripts);
     }
 
     @Test
@@ -218,7 +219,7 @@ public class ModelsReportRendererTest {
 
         Set<String> scripts = testee.getScripts();
 
-        assertEquals(new HashSet<>(Arrays.asList("cmmn-js/cmmn.js", "cmmn-js/cmmn-viewer.min.js")), scripts);
+        assertEquals(new HashSet<>(Arrays.asList("cmmn-js/cmmn.js", "cmmn-js/cmmn-viewer.production.min.js")), scripts);
     }
 
     @Test

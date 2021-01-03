@@ -63,7 +63,16 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
         text(getTitle());
         sink.title_();
         if (configuration.hasDmn()) {
-            stylesheet("dmn-js/css/dmn-js.css");
+            stylesheet("dmn-js/assets/dmn-js-drd.css");
+            stylesheet("dmn-js/assets/dmn-js-decision-table.css");
+            stylesheet("dmn-js/assets/dmn-js-literal-expression.css");
+            stylesheet("dmn-js/assets/dmn-js-shared.css");
+            stylesheet("dmn-js/assets/dmn-font/css/dmn.css");
+            scripts.add("dmn-js/assets/dmn-font/font/dmn.eot");
+            scripts.add("dmn-js/assets/dmn-font/font/dmn.svg");
+            scripts.add("dmn-js/assets/dmn-font/font/dmn.ttf");
+            scripts.add("dmn-js/assets/dmn-font/font/dmn.woff");
+            scripts.add("dmn-js/assets/dmn-font/font/dmn.woff2");
         }
         sink.head_();
 
@@ -136,7 +145,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
     }
 
     private void renderModels(List<File> models, String type) {
-        sourceJavaScript(type + "-js/" + type + "-viewer.min.js");
+        sourceJavaScript(type + "-js/" + type + "-viewer.production.min.js");
         sourceJavaScript(type + "-js/" + type + ".js");
         for (File model : models) {
             startSection(model.getName());
@@ -191,7 +200,7 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
 
     protected String getDecisionName(File dmn) {
         try {
-            return getModelName(dmn, "http://www.omg.org/spec/DMN/20151101/dmn.xsd", "decision");
+            return getModelName(dmn, "https://www.omg.org/spec/DMN/20191111/MODEL/", "decision");
         } catch (XMLStreamException | FactoryConfigurationError | IOException e) {
             logger.warn("failed to get dmn decision name", e);
             return null;
