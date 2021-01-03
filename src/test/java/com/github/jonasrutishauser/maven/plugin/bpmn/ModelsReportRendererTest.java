@@ -34,7 +34,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("ModelsReportRenderer")
-public class ModelsReportRendererTest {
+class ModelsReportRendererTest {
 
     private static final File MODELS_DIRECTORY = new File("src/test/models");
 

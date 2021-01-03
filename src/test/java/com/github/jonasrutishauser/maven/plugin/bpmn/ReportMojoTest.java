@@ -57,7 +57,7 @@ import com.github.jonasrutishauser.maven.plugin.bpmn.junit.extension.TemporaryFo
 
 @DisplayName("ReportMojo")
 @ExtendWith(TemporaryFolderExtension.class)
-public class ReportMojoTest {
+class ReportMojoTest {
 
     @Test
     @DisplayName("getModels() in non existing directory returns nothing")

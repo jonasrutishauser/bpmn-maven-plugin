@@ -32,7 +32,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("ReportConfiguration")
-public class ReportConfigurationTest {
+class ReportConfigurationTest {
 
     @Test
     @DisplayName("canGenerateReport() without models returns false")

@@ -1,5 +1,9 @@
 package com.github.jonasrutishauser.maven.plugin.bpmn;
 
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
 /*
  * Copyright (C) 2017 Jonas Rutishauser
  * 
@@ -29,7 +33,6 @@ import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.XMLEvent;
 
 import org.apache.maven.doxia.markup.HtmlMarkup;
 import org.apache.maven.doxia.sink.Sink;
@@ -219,9 +222,12 @@ public class ModelsReportRenderer extends AbstractMavenReportRenderer {
     private String getModelName(File model, String namespace, String localName)
             throws XMLStreamException, FactoryConfigurationError, IOException {
         try (InputStream in = new FileInputStream(model)) {
-            XMLStreamReader reader = XMLInputFactory.newFactory().createXMLStreamReader(in);
+            XMLInputFactory factory = XMLInputFactory.newFactory();
+            factory.setProperty(ACCESS_EXTERNAL_DTD, "");
+            factory.setProperty(ACCESS_EXTERNAL_SCHEMA, "");
+            XMLStreamReader reader = factory.createXMLStreamReader(in);
             while (reader.hasNext()) {
-                if (reader.next() == XMLEvent.START_ELEMENT && namespace.equals(reader.getNamespaceURI())
+                if (reader.next() == START_ELEMENT && namespace.equals(reader.getNamespaceURI())
                         && localName.equals(reader.getLocalName())) {
                     for (int i = 0; i < reader.getAttributeCount(); i++) {
                         if ("name".equals(reader.getAttributeLocalName(i))) {
