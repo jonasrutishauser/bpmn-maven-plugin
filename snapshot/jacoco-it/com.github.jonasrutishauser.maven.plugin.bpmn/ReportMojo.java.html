@@ -110,11 +110,11 @@ public class ReportMojo extends AbstractMavenReport {
 <span class="fc bfc" id="L110" title="All 2 branches covered.">            if (source == null) {</span>
 <span class="fc" id="L111">                source = getSourceFromDependency(script);</span>
             }
-<span class="pc" id="L113">            try (InputStream resource = source.openStream()) {</span>
+<span class="fc" id="L113">            try (InputStream resource = source.openStream()) {</span>
 <span class="fc" id="L114">                Path target = Paths.get(getOutputDirectory(), script);</span>
 <span class="fc" id="L115">                Files.createDirectories(target.getParent());</span>
 <span class="fc" id="L116">                Files.copy(resource, target, StandardCopyOption.REPLACE_EXISTING);</span>
-<span class="pc bpc" id="L117" title="6 of 8 branches missed.">            } catch (IOException e) {</span>
+<span class="nc" id="L117">            } catch (IOException e) {</span>
 <span class="nc" id="L118">                throw new MavenReportException(&quot;failed to copy script '&quot; + script + &quot;' to target&quot;, e);</span>
 <span class="fc" id="L119">            }</span>
 <span class="fc" id="L120">        }</span>
@@ -123,10 +123,10 @@ public class ReportMojo extends AbstractMavenReport {
     private URL getSourceFromDependency(String script) throws MavenReportException {
 <span class="fc" id="L124">        String artifactId = script.substring(0, script.indexOf('/'));</span>
 <span class="fc" id="L125">        Properties pomProperties = new Properties();</span>
-<span class="pc" id="L126">        try (InputStream properties = getClass()</span>
-<span class="fc" id="L127">                .getResourceAsStream(&quot;/META-INF/maven/org.webjars.bower/&quot; + artifactId + &quot;/pom.properties&quot;)) {</span>
+<span class="fc" id="L126">        try (InputStream properties = getClass()</span>
+<span class="fc" id="L127">                .getResourceAsStream(&quot;/META-INF/maven/org.webjars.npm/&quot; + artifactId + &quot;/pom.properties&quot;)) {</span>
 <span class="fc" id="L128">            pomProperties.load(properties);</span>
-<span class="pc bpc" id="L129" title="6 of 8 branches missed.">        } catch (IOException e) {</span>
+<span class="nc" id="L129">        } catch (IOException e) {</span>
 <span class="nc" id="L130">            throw new MavenReportException(&quot;failed to determine version of bower script &quot; + artifactId, e);</span>
 <span class="fc" id="L131">        }</span>
 <span class="fc" id="L132">        return getClass().getResource(&quot;/META-INF/resources/webjars/&quot; + artifactId + &quot;/&quot;</span>
@@ -149,13 +149,13 @@ public class ReportMojo extends AbstractMavenReport {
 <span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (!srcFolder.exists()) {</span>
 <span class="nc" id="L150">            return Collections.emptyList();</span>
         }
-<span class="pc" id="L152">        try (Stream&lt;Path&gt; stream = Files.find(srcFolder.toPath(), Integer.MAX_VALUE,</span>
+<span class="fc" id="L152">        try (Stream&lt;Path&gt; stream = Files.find(srcFolder.toPath(), Integer.MAX_VALUE,</span>
 <span class="fc bfc" id="L153" title="All 4 branches covered.">                (file, attributes) -&gt; file.toFile().isFile() &amp;&amp; file.toString().endsWith(&quot;.&quot; + type))) {</span>
 <span class="fc" id="L154">            return stream.map(Path::toFile).collect(Collectors.toList());</span>
-<span class="pc bpc" id="L155" title="6 of 8 branches missed.">        } catch (IOException e) {</span>
+<span class="nc" id="L155">        } catch (IOException e) {</span>
 <span class="nc" id="L156">            throw new MavenReportException(&quot;could not find &quot; + type + &quot; files&quot;, e);</span>
         }
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
