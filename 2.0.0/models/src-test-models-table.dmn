@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="definitions" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="decision" name="Test dmn Model">
+    <decisionTable id="decisionTable">
+      <input id="input1" label="foo" camunda:inputVariable="">
+        <inputExpression id="inputExpression1" typeRef="boolean">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="output1" label="bar" name="" typeRef="string" />
+      <rule id="row-585140721-1">
+        <description></description>
+        <inputEntry id="UnaryTests_163r8yt">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0sz5jzb">
+          <text>"Foo"</text>
+        </outputEntry>
+      </rule>
+      <rule id="row-585140721-2">
+        <description></description>
+        <inputEntry id="UnaryTests_0xssynl">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0bqyd3g">
+          <text>"Bar"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_0tvnbn0">
+      <dmndi:DMNShape id="DMNShape_1as4xqy" dmnElementRef="decision">
+        <dc:Bounds height="80" width="180" x="200" y="8" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
